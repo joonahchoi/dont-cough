@@ -1,0 +1,1875 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>감염병 확산 실험실</title>
+<meta name="description" content="초등 고학년이 독감·노로바이러스·홍역을 30명 교실에 직접 퍼뜨려 보고, 예방 카드 3장으로 우리 반을 지키는 보건 탐구 시뮬레이터. Copyright by 수성중 주나쌤">
+<meta property="og:title" content="감염병 확산 실험실 · 보건 탐구 시뮬레이터 1호">
+<meta property="og:description" content="예방 카드 3장으로 우리 반을 지켜라! 독감·노로바이러스·홍역 탐구 시뮬레이터">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0E7A84">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg stroke='%23D2368F' stroke-width='5' stroke-linecap='round'%3E%3Cpath d='M32 6v10M32 48v10M6 32h10M48 32h10M13 13l7 7M44 44l7 7M51 13l-7 7M20 44l-7 7'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='15' fill='%23D2368F'/%3E%3Ccircle cx='27' cy='29' r='3' fill='%23fff'/%3E%3C/svg%3E">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Dodum&family=Jua&display=swap">
+<style>
+/* 레이아웃: 모눈 탐구 노트 한 장 — 왼쪽은 위에서 내려다본 교실 무대, 오른쪽은 실험 노트(빨간 여백선) */
+:root{
+  --paper:#F6F9F8; --grid:#DCE7EA; --sheet:#FFFFFF; --rule:#CAD7DE; --margin:#E9A3A0;
+  --ink:#1C2A3D; --ink-soft:#55667B; --accent:#0E7A84; --accent-ink:#FFFFFF; --accent-soft:#D7EEF0;
+  --stamp:#D23F38; --germ:#D2368F; --uv:#2A1B57;
+  --healthy:#6DB7EA; --latent:#E5B52A; --sick:#EE8436; --recovered:#45AD73; --shield:#3B6FDB;
+  --floor:#EEF2EC; --floor-line:#E0E6DE; --wall:#C7D1DA; --desk:#E7D0A8; --desk-edge:#C6A776; --board:#2F5545; --chalk:#F2F6EC;
+  --font-display:"Jua","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-body:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  --font-hand:"Gaegu","Apple SD Gothic Neo","Malgun Gothic",cursive;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#111824; --grid:#1A2432; --sheet:#18212E; --rule:#2A3849; --margin:#7A3B3F;
+  --ink:#E6EDF5; --ink-soft:#9DACBE; --accent:#46BCC6; --accent-ink:#0B1A1D; --accent-soft:#16383E;
+  --stamp:#F0675F; --germ:#F062B6; --uv:#1A1238;
+  --healthy:#7DC4F3; --latent:#F0C84B; --sick:#F59B54; --recovered:#5CC58B; --shield:#7398F2;
+  --floor:#1E2834; --floor-line:#243040; --wall:#34445A; --desk:#5B4B34; --desk-edge:#7A6440; --board:#21423A; --chalk:#E6EDE3;
+  color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --paper:#111824; --grid:#1A2432; --sheet:#18212E; --rule:#2A3849; --margin:#7A3B3F;
+  --ink:#E6EDF5; --ink-soft:#9DACBE; --accent:#46BCC6; --accent-ink:#0B1A1D; --accent-soft:#16383E;
+  --stamp:#F0675F; --germ:#F062B6; --uv:#1A1238;
+  --healthy:#7DC4F3; --latent:#F0C84B; --sick:#F59B54; --recovered:#5CC58B; --shield:#7398F2;
+  --floor:#1E2834; --floor-line:#243040; --wall:#34445A; --desk:#5B4B34; --desk-edge:#7A6440; --board:#21423A; --chalk:#E6EDE3;
+  color-scheme:dark; }
+
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+  color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0;
+}
+.wrap{max-width:1280px;margin:0 auto}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+h1,h2,h3{font-family:var(--font-display);font-weight:400;line-height:1.25;text-wrap:balance;margin:0}
+
+/* ---------- 상단 ---------- */
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:14px 10px}
+.brand{display:flex;flex-direction:column;line-height:1.2;margin-right:auto}
+.brand .eyebrow{font-size:12px;letter-spacing:.08em;color:var(--ink-soft)}
+.brand .name{font-family:var(--font-display);font-size:22px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{display:flex;align-items:center;gap:6px;border:1.5px solid var(--rule);background:var(--sheet);border-radius:999px;padding:5px 12px 5px 6px;font-size:14px}
+.tab .num{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-family:var(--font-display);font-size:13px}
+.tab[aria-current="step"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.tab[data-done="1"] .num{background:var(--recovered);color:#fff}
+.tab:disabled{opacity:.45;cursor:not-allowed}
+.ghost-btn{border:1.5px dashed var(--rule);background:transparent;border-radius:10px;padding:6px 12px;font-size:14px;color:var(--ink-soft)}
+.ghost-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ---------- 공통 종이 ---------- */
+.sheet{background:var(--sheet);border:1.5px solid var(--rule);border-radius:var(--r);position:relative}
+.notebook{padding:18px 18px 18px 34px}
+.notebook::before{content:"";position:absolute;left:20px;top:0;bottom:0;width:2px;background:var(--margin);opacity:.7}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:12px 18px;background:var(--accent);color:var(--accent-ink);font-family:var(--font-display);font-size:18px;box-shadow:0 3px 0 color-mix(in srgb,var(--accent) 55%,#000)}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 color-mix(in srgb,var(--accent) 55%,#000)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.secondary{background:var(--sheet);color:var(--ink);border:1.5px solid var(--rule);box-shadow:0 3px 0 var(--rule)}
+.btn svg{width:20px;height:20px}
+.hand{font-family:var(--font-hand);font-size:20px;line-height:1.3}
+.label{font-size:12px;letter-spacing:.08em;color:var(--ink-soft)}
+
+/* ---------- 표지 ---------- */
+#cover{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;align-items:center;padding-block:10px 24px}
+#cover h1{font-size:clamp(40px,6vw,72px);letter-spacing:-.01em}
+#cover h1 .germ-word{color:var(--germ)}
+.cover-text{display:flex;flex-direction:column;gap:16px;min-width:0}
+.cover-text .lead{font-size:18px;max-width:34em;margin:0}
+.exp-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0;padding:0;list-style:none}
+.exp-list li{padding:12px 12px 10px;display:flex;flex-direction:column;gap:4px}
+.exp-list .k{font-size:12px;color:var(--ink-soft)}
+.exp-list .t{font-family:var(--font-display);font-size:19px}
+.exp-list .r{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink-soft)}
+.exp-list .r svg{width:18px;height:18px;color:var(--germ)}
+.promise{border-left:4px solid var(--recovered);padding:6px 12px;margin:0;font-size:15px;background:color-mix(in srgb,var(--recovered) 10%,transparent);border-radius:0 10px 10px 0}
+.start-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1 1 220px}
+.field input{border:1.5px solid var(--rule);border-radius:10px;padding:10px 12px;background:var(--sheet);font-size:17px}
+.fine{font-size:13px;color:var(--ink-soft);margin:0}
+.panel .field{flex:none}
+.cover-stage{padding:10px}
+.cover-stage canvas{display:block;width:100%;height:auto;border-radius:10px}
+
+/* ---------- 실험실 ---------- */
+#lab{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(320px,1fr);gap:18px;padding-block:6px 20px;align-items:start}
+.stage-col{display:flex;flex-direction:column;gap:10px;min-width:0;position:sticky;top:env(safe-area-inset-top,0px)}
+.stage{padding:8px;overflow:hidden}
+.stage canvas{display:block;width:100%;height:auto;border-radius:9px;touch-action:manipulation}
+.memo{margin-top:8px;min-height:2.9em;display:flex;align-items:center;gap:10px;background:#FFF7C2;color:#3B3420;border-radius:4px 12px 12px 12px;padding:6px 12px;font-family:var(--font-hand);font-size:20px;line-height:1.25;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.memo::before{content:"메모";flex:none;font-family:var(--font-body);font-size:12px;letter-spacing:.06em;color:#8A7A3A;border:1px solid #D9C878;border-radius:999px;padding:1px 8px}
+.memo[data-show="0"]{color:#8A7A3A}
+.memo.pop{animation:memopop .35s ease-out}
+@keyframes memopop{from{transform:translateY(4px);background:#FFE97A}}
+.stage-ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 2px 0}
+.ctl{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--rule);background:var(--sheet);border-radius:10px;padding:6px 10px;font-size:14px;min-height:38px}
+.ctl svg{width:18px;height:18px}
+.ctl[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.ctl.lens[aria-pressed="true"]{background:var(--uv);border-color:var(--uv);color:#F7F07A}
+.ctl.lens[aria-pressed="false"].nudge{animation:nudge 1s ease-in-out infinite}
+@keyframes nudge{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--latent) 55%,transparent)}}
+.ctl:disabled{opacity:.4;cursor:not-allowed}
+.ctl-spacer{flex:1}
+.daybox{font-family:var(--font-display);font-size:16px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:var(--ink-soft);padding:0 4px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.legend i.ring{background:transparent;border:2px dashed var(--latent)}
+.legend i.shield{background:transparent;border:2.5px solid var(--shield)}
+
+.beds{display:flex;align-items:center;gap:10px;padding:10px 14px;flex-wrap:wrap}
+.beds .title{font-family:var(--font-display);font-size:16px;display:flex;align-items:center;gap:6px}
+.beds .title svg{width:20px;height:20px;color:var(--stamp)}
+.bed-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.bed{width:48px;height:28px;border-radius:6px;border:1.5px solid var(--rule);background:var(--sheet);position:relative;overflow:hidden;transition:background .2s,border-color .2s}
+.bed::before{content:"";position:absolute;left:4px;top:5px;width:11px;height:15px;border-radius:4px;background:var(--rule);opacity:.8}
+.bed::after{content:"";position:absolute;left:18px;right:3px;top:3px;bottom:3px;border-radius:4px;background:color-mix(in srgb,var(--rule) 45%,transparent)}
+.bed[data-on="1"]{border-color:var(--sick)}
+.bed[data-on="1"]::before{left:4px;top:6px;width:13px;height:13px;border-radius:50%;background:var(--sick);opacity:1}
+.bed[data-on="1"]::after{background:color-mix(in srgb,var(--sick) 35%,var(--sheet))}
+.overflow{font-family:var(--font-display);color:var(--stamp);font-size:16px;display:flex;gap:4px;align-items:center}
+.overflow .dot{width:12px;height:12px;border-radius:50%;background:var(--sick);display:inline-block;animation:pop .3s}
+@keyframes pop{from{transform:scale(0)}}
+.bed-note{font-size:13px;color:var(--ink-soft);margin-left:auto}
+
+.note-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.mission{display:flex;flex-direction:column;gap:8px}
+.mission .eyebrow{display:flex;justify-content:space-between;align-items:center;gap:6px 8px;flex-wrap:wrap}
+.mission .eyebrow .label{white-space:nowrap}
+.eb-left{display:inline-flex;align-items:center;gap:10px}
+.back{display:inline-flex;align-items:center;gap:4px;border:1.5px solid var(--rule);background:var(--sheet);border-radius:999px;padding:4px 12px 4px 8px;font-size:14px;color:var(--ink);min-height:32px}
+.back svg{width:16px;height:16px}
+.back:hover{color:var(--accent);border-color:var(--accent)}
+.linkbtn{border:0;background:none;padding:0;color:var(--accent);text-decoration:underline;text-underline-offset:3px;font:inherit;cursor:pointer}
+.seek{flex:1 1 100%;width:100%;accent-color:var(--accent);height:26px;margin:2px 0 0;cursor:pointer}
+.seek:disabled{opacity:.35;cursor:not-allowed}
+.tree-key{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}
+.tree-key svg{width:24px;height:8px;margin-left:6px}
+.tags-ex{font-size:12px;letter-spacing:.02em;color:var(--ink-soft);margin:-6px 0 0;display:flex;flex-wrap:wrap;gap:2px 10px}
+.tags-ex span:first-child{color:var(--ink-soft);opacity:.75}
+.mission h2{font-size:26px}
+.mission p{margin:0}
+.steps{display:flex;gap:4px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.steps li{font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--rule);color:var(--ink-soft)}
+.steps li[data-s="now"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.steps li[data-s="done"]{color:var(--recovered);border-color:var(--recovered)}
+.panel{display:flex;flex-direction:column;gap:12px}
+.facts{display:grid;grid-template-columns:1fr;gap:10px;margin:0}
+.fact{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;align-items:start;border-bottom:1px dashed var(--rule);padding-bottom:8px}
+.fact dt{font-size:13px;color:var(--ink-soft);padding-top:2px}
+.fact dd{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px 4px 6px;background:color-mix(in srgb,var(--germ) 10%,var(--sheet));border:1.5px solid color-mix(in srgb,var(--germ) 35%,var(--rule));font-size:14px}
+.chip svg{width:18px;height:18px;color:var(--germ)}
+.chip b{font-weight:400;font-family:var(--font-display);color:var(--germ)}
+
+.counts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.count{border:1.5px solid var(--rule);border-radius:10px;padding:6px 8px;display:flex;flex-direction:column;line-height:1.2}
+.count .v{font-family:var(--font-display);font-size:24px;font-variant-numeric:tabular-nums}
+.count .k{font-size:12px;color:var(--ink-soft)}
+.count.sick .v{color:var(--sick)} .count.hidden .v{color:var(--latent)} .count.rec .v{color:var(--recovered)}
+.chart-box{padding:10px 10px 4px}
+.chart-box svg{display:block;width:100%;max-width:560px;margin-inline:auto;height:auto;overflow:visible}
+.chart-cap{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--ink-soft);padding:0 4px 4px;flex-wrap:wrap}
+.chart-cap span{display:inline-flex;align-items:center;gap:6px}
+.chart-cap i{display:inline-block;width:18px;height:0;border-top:3px solid var(--sick)}
+.chart-cap i.g{border-top:2px dashed var(--ink-soft)}
+.chart-cap i.b{border-top:2px dashed var(--stamp)}
+
+.question{display:flex;flex-direction:column;gap:8px}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.opt{display:flex;align-items:center;gap:8px;border:1.5px solid var(--rule);border-radius:12px;background:var(--sheet);padding:10px;text-align:left;font-size:16px}
+.opt svg{width:26px;height:26px;color:var(--germ);flex:none}
+.opt[data-r="right"]{border-color:var(--recovered);background:color-mix(in srgb,var(--recovered) 14%,var(--sheet))}
+.opt[data-r="wrong"]{border-color:var(--stamp);opacity:.75}
+.route-bars{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.route-bars li{display:grid;grid-template-columns:110px minmax(0,1fr) 44px;gap:8px;align-items:center;font-size:14px}
+.route-bars .bar{height:14px;border-radius:7px;background:color-mix(in srgb,var(--germ) 18%,transparent);overflow:hidden}
+.route-bars .bar span{display:block;height:100%;background:var(--germ);border-radius:7px}
+.route-bars .n{font-variant-numeric:tabular-nums;text-align:right}
+
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.pcard{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 10px;align-items:center;text-align:left;border:1.5px solid var(--rule);background:var(--sheet);border-radius:12px;padding:10px;min-height:76px;transition:transform .12s,border-color .12s,box-shadow .12s}
+.pcard .ic{grid-row:span 2;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.pcard .ic svg{width:30px;height:30px}
+.pcard .nm{font-family:var(--font-display);font-size:17px;line-height:1.2}
+.pcard .ds{font-size:13px;color:var(--ink-soft);line-height:1.35}
+.pcard[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);transform:translateY(-2px)}
+.pcard[aria-pressed="true"]::after{content:attr(data-order);position:absolute;right:-6px;top:-8px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-family:var(--font-display);display:grid;place-items:center;font-size:14px}
+.pcard:disabled{opacity:.45;cursor:not-allowed}
+.pick-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pick-foot .slots{display:flex;gap:6px}
+.pick-foot .slot{width:34px;height:34px;border-radius:9px;border:2px dashed var(--rule);display:grid;place-items:center;color:var(--accent)}
+.pick-foot .slot svg{width:22px;height:22px}
+.pick-foot .slot[data-f="1"]{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+
+.result-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.stampmark{font-family:var(--font-display);font-size:26px;color:var(--stamp);border:4px solid var(--stamp);border-radius:50%;width:96px;height:96px;display:grid;place-items:center;transform:rotate(-12deg);text-align:center;line-height:1.05;animation:stamp .45s cubic-bezier(.2,1.6,.4,1) both;flex:none}
+.stampmark.fail{color:var(--ink-soft);border-color:var(--ink-soft);font-size:21px}
+@keyframes stamp{from{transform:rotate(-12deg) scale(2.2);opacity:0}}
+.stars{display:flex;gap:2px}
+.stars svg{width:28px;height:28px}
+.result-head .big{font-family:var(--font-display);font-size:22px;line-height:1.3}
+.saved{display:flex;align-items:center;gap:10px;background:color-mix(in srgb,var(--latent) 16%,var(--sheet));border:1.5px solid color-mix(in srgb,var(--latent) 50%,var(--rule));border-radius:12px;padding:10px 12px}
+.saved .n{font-family:var(--font-display);font-size:34px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;flex:none}
+.result-head .txt{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1 1 220px}
+.details{display:flex;flex-direction:column;gap:12px;border-top:1.5px dashed var(--rule);padding-top:12px}
+.gauge{display:flex;flex-direction:column;gap:6px}
+.gauge .row{display:grid;grid-template-columns:76px minmax(0,1fr) 52px;gap:8px;align-items:center;font-size:14px}
+.gauge .track{position:relative;height:16px;border-radius:8px;background:color-mix(in srgb,var(--ink) 8%,transparent)}
+.gauge .fill{position:absolute;left:0;top:0;bottom:0;border-radius:8px}
+.gauge .one{position:absolute;top:-4px;bottom:-4px;width:0;border-left:2px dashed var(--stamp)}
+.gauge .v{font-family:var(--font-display);text-align:right;font-variant-numeric:tabular-nums}
+.gauge .cap{font-size:13px;color:var(--ink-soft)}
+.cardfx{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.cardfx li{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:8px;align-items:center;font-size:14px;border-bottom:1px dashed var(--rule);padding-bottom:6px}
+.cardfx .ic{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.cardfx .ic svg{width:22px;height:22px}
+.cardfx .why{color:var(--ink-soft);font-size:13px;display:block;line-height:1.35}
+.tag{font-size:12px;border-radius:999px;padding:2px 8px;white-space:nowrap;border:1.5px solid}
+.tag.great{color:var(--recovered);border-color:var(--recovered)}
+.tag.ok{color:var(--accent);border-color:var(--accent)}
+.tag.little{color:var(--latent);border-color:var(--latent)}
+.tag.none{color:var(--ink-soft);border-color:var(--rule)}
+.hint{border-left:4px solid var(--latent);padding:8px 12px;background:color-mix(in srgb,var(--latent) 12%,transparent);border-radius:0 10px 10px 0;margin:0}
+.learn{border:1.5px solid var(--recovered);border-radius:12px;padding:10px 12px;background:color-mix(in srgb,var(--recovered) 9%,var(--sheet))}
+.learn h3{font-size:18px;margin-bottom:4px}
+.learn ul{margin:0;padding-left:20px}
+.real{font-size:14px;color:var(--ink-soft);margin:0}
+.real b{color:var(--ink);font-weight:400;font-family:var(--font-display)}
+.row-btns{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- 탐구 카드 ---------- */
+#final{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;padding-block:10px 24px;align-items:start}
+#final h2{font-size:34px}
+.final-list{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.final-list li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px}
+.final-list .dn{font-family:var(--font-display);font-size:19px}
+.final-list .cc{display:flex;gap:4px;color:var(--accent)}
+.final-list .cc svg{width:24px;height:24px}
+.final-list .meta{font-size:13px;color:var(--ink-soft)}
+.preview{padding:10px}
+.preview img{display:block;width:100%;height:auto;border-radius:8px}
+.save-msg{font-size:14px;color:var(--ink-soft);margin:0}
+
+/* ---------- 근거 ---------- */
+dialog{border:1.5px solid var(--rule);border-radius:16px;background:var(--sheet);color:var(--ink);padding:0;width:min(860px,calc(100vw - 32px));max-height:calc(100vh - 40px)}
+dialog::backdrop{background:rgba(10,16,26,.55)}
+.ev{padding:20px 22px 24px;display:flex;flex-direction:column;gap:14px;font-size:15px}
+.ev h2{font-size:26px}
+.ev h3{font-size:19px;margin-top:6px}
+.ev p{margin:0;max-width:68ch}
+.ev ol,.ev ul{margin:0;padding-left:22px}
+.ev li{margin-bottom:4px}
+.tbl{overflow-x:auto;border:1.5px solid var(--rule);border-radius:10px}
+.tbl table{border-collapse:collapse;width:100%;font-size:14px;min-width:760px}
+.tbl td:first-child,.tbl th:first-child{white-space:nowrap}
+.tbl th,.tbl td{padding:7px 10px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+.tbl th{font-family:var(--font-display);font-weight:400;background:color-mix(in srgb,var(--accent) 8%,var(--sheet))}
+.tbl td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.ev-head{display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:0;background:var(--sheet);padding:14px 22px;border-bottom:1.5px solid var(--rule);z-index:1}
+.ev a{color:var(--accent)}
+
+footer{padding-block:10px 22px;text-align:center;font-size:13px;color:var(--ink-soft)}
+
+@media (max-width:980px){
+  #lab{grid-template-columns:minmax(0,1fr)}
+  .stage-col,.note-col{display:contents}
+  .mission{order:1} .stage{order:2} #panel{order:3} .beds{order:4}
+  #cover{grid-template-columns:minmax(0,1fr)}
+  .cover-stage{order:-1}
+  #final{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){
+  .exp-list{grid-template-columns:minmax(0,1fr)}
+  .cards{grid-template-columns:minmax(0,1fr)}
+  .opts{grid-template-columns:minmax(0,1fr)}
+  .counts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .memo{font-size:16px;max-width:75%;left:12px;top:12px}
+  .notebook{padding:14px 14px 14px 28px}
+  .notebook::before{left:15px}
+  .fact{grid-template-columns:minmax(0,1fr)}
+  .brand .name{font-size:19px}
+  .route-bars li{grid-template-columns:86px minmax(0,1fr) 36px}
+  .gauge .row{grid-template-columns:70px minmax(0,1fr) 44px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><span class="eyebrow">보건 탐구 시뮬레이터 1호</span><span class="name">감염병 확산 실험실</span></div>
+    <nav class="tabs" id="tabs" aria-label="실험 순서"></nav>
+    <button class="ghost-btn" id="btn-evidence" type="button">선생님용 근거 보기</button>
+  </header>
+
+  <main>
+    <!-- 표지 -->
+    <section id="cover" aria-labelledby="cover-title">
+      <div class="cover-text">
+        <span class="label">초등 고학년 · 1인 1기기 탐구</span>
+        <h1 id="cover-title">감염병 확산<br><span class="germ-word">실험실</span></h1>
+        <p class="lead">눈에 보이지 않는 병균은 우리 반에서 어떻게 퍼질까요? 세 가지 감염병을 직접 퍼뜨려 보고, 예방 카드 3장으로 우리 반을 지켜 보세요.</p>
+        <ul class="exp-list" id="exp-list"></ul>
+        <p class="promise">감염은 누구의 잘못도 아니에요. 퍼지는 걸 막는 건 우리 모두의 몫이에요.</p>
+        <div class="start-row">
+          <label class="field" for="nick"><span class="label">탐구원 이름 (별명도 좋아요)</span>
+            <input id="nick" maxlength="12" placeholder="예: 손씻기 대장" autocomplete="off"></label>
+          <button class="btn" id="btn-start" type="button">실험실 들어가기</button>
+        </div>
+        <p class="fine">이 실험실은 실제 예측이 아니라, 감염병이 퍼지는 원리를 보여 주는 모형이에요.</p>
+      </div>
+      <div class="sheet cover-stage"><canvas id="cover-canvas" width="960" height="640" aria-label="30명이 있는 교실 그림"></canvas></div>
+    </section>
+
+    <!-- 실험실 -->
+    <section id="lab" hidden aria-label="실험실">
+      <div class="stage-col">
+        <div class="sheet stage">
+          <canvas id="room" width="960" height="640" aria-label="위에서 내려다본 교실. 점 하나가 친구 한 명이에요."></canvas>
+          <div class="memo" id="memo" data-show="0" aria-live="polite">실험을 시작하면 이곳에 관찰 메모가 나타나요.</div>
+          <div class="stage-ctl">
+            <button class="ctl" id="c-play" type="button" aria-label="일시정지"></button>
+            <button class="ctl" id="c-speed" type="button">빠르기 1배</button>
+            <button class="ctl" id="c-skip" type="button">끝까지 보기</button>
+            <span class="ctl-spacer"></span>
+            <button class="ctl lens" id="c-lens" type="button" aria-pressed="false"></button>
+            <button class="ctl" id="c-tree" type="button" aria-pressed="true"></button>
+            <span class="daybox" id="daybox"></span>
+            <input class="seek" id="c-seek" type="range" min="0" max="21" step="0.01" value="0" aria-label="날짜 옮기기 (끌어서 원하는 날로 이동)">
+          </div>
+          <div class="legend" aria-hidden="true">
+            <span><i style="background:var(--healthy)"></i>건강</span>
+            <span><i class="ring"></i>숨은 감염(돋보기)</span>
+            <span><i style="background:var(--sick)"></i>아파요</span>
+            <span><i style="background:var(--recovered)"></i>나았어요</span>
+            <span><i class="shield"></i>예방접종</span>
+            <span class="tree-key">감염 길:
+              <svg viewBox="0 0 28 8" aria-hidden="true"><line x1="1" y1="4" x2="27" y2="4" stroke="var(--germ)" stroke-width="2"/></svg>침방울
+              <svg viewBox="0 0 28 8" aria-hidden="true"><line x1="1" y1="4" x2="27" y2="4" stroke="var(--germ)" stroke-width="2" stroke-dasharray="7 4"/></svg>손·물건
+              <svg viewBox="0 0 28 8" aria-hidden="true"><line x1="2" y1="4" x2="27" y2="4" stroke="var(--germ)" stroke-width="2.4" stroke-dasharray="0.1 5" stroke-linecap="round"/></svg>음식
+              <svg viewBox="0 0 28 8" aria-hidden="true"><line x1="1" y1="4" x2="27" y2="4" stroke="var(--germ)" stroke-width="2" stroke-dasharray="10 3 2 3"/></svg>공기
+            </span>
+          </div>
+        </div>
+        <div class="sheet beds" id="beds" aria-live="polite"></div>
+      </div>
+      <div class="note-col">
+        <div class="sheet notebook mission">
+          <div class="eyebrow"><span class="eb-left"><button class="back" id="m-back" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>이전</button><span class="label" id="m-eyebrow"></span></span><ol class="steps" id="steps" aria-label="진행 단계"></ol></div>
+          <h2 id="m-title"></h2>
+          <p id="m-text"></p>
+        </div>
+        <div class="sheet notebook panel" id="panel"></div>
+      </div>
+    </section>
+
+    <!-- 탐구 카드 -->
+    <section id="final" hidden aria-labelledby="final-title">
+      <div class="sheet notebook panel">
+        <span class="eb-left"><button class="back" id="f-back" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>이전</button><span class="label">마지막 단계</span></span>
+        <h2 id="final-title">내 감염병 탐구 카드</h2>
+        <p style="margin:0">세 가지 실험 결과를 한 장으로 모았어요. 배운 점을 한 줄로 쓰고 카드 이미지를 저장해서 패들렛이나 학습지에 올려 보세요.</p>
+        <ul class="final-list" id="final-list"></ul>
+        <label class="field" for="nick2"><span class="label">탐구원 이름</span><input id="nick2" maxlength="12" autocomplete="off"></label>
+        <label class="field" for="learned"><span class="label">내가 배운 점 한 줄</span><input id="learned" maxlength="40" autocomplete="off" aria-describedby="learn-ex"></label>
+        <p class="tags-ex" id="learn-ex"><span>예시</span><span>#병마다_막는_법이_달라요</span><span>#환기가_생각보다_더_중요해요</span><span>#기침할_땐_팔꿈치로_하는_게_매너예요</span><span>#겉으론_멀쩡해도_옮길_수_있어요</span><span>#예방접종은_친구까지_지켜_줘요</span></p>
+        <div class="row-btns">
+          <button class="btn" id="btn-save" type="button">탐구 카드 이미지 저장</button>
+          <button class="btn secondary" id="btn-again" type="button">실험 다시 보기</button>
+        </div>
+        <p class="save-msg" id="save-msg" aria-live="polite"></p>
+      </div>
+      <div class="sheet preview"><img id="card-img" alt="내 감염병 탐구 카드 미리보기"></div>
+    </section>
+  </main>
+
+  <footer>Copyright by 수성중 주나쌤 · 보건 탐구 시뮬레이터 1호 「감염병 확산 실험실」</footer>
+</div>
+
+<dialog id="evidence" aria-labelledby="ev-title">
+  <div class="ev-head"><h2 id="ev-title">선생님용 근거 보기</h2><button class="btn secondary" id="ev-close" type="button">닫기</button></div>
+  <div class="ev" id="ev-body"></div>
+</dialog>
+
+<script>/* 감염병 확산 실험실 — 시뮬레이션 엔진
+ * 30명 교실, 하루 단위 확률적 SEIR 행위자 기반 모형.
+ * 같은 반·같은 운(공통 난수)으로 시나리오를 비교하기 위해
+ * 학생마다 고정된 '감염 문턱값'을 쓰고, 누적 감염 압력이 문턱을 넘으면 감염된다.
+ */
+(function (root) {
+  'use strict';
+
+  var N = 30, COLS = 6, ROWS = 5;
+
+  // ---------- 해시 기반 난수 (시드·학생·용도별로 항상 같은 값) ----------
+  function fmix(h) {
+    h ^= h >>> 16; h = Math.imul(h, 0x85ebca6b);
+    h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35);
+    h ^= h >>> 16; return h >>> 0;
+  }
+  function rnd(seed, a, b, c) {
+    var h = fmix((seed | 0) ^ 0x9e3779b9);
+    h = fmix(h ^ Math.imul((a | 0) + 1, 0x27d4eb2d));
+    h = fmix(h ^ Math.imul((b | 0) + 7, 0x165667b1));
+    h = fmix(h ^ Math.imul((c | 0) + 13, 0x61c88647));
+    return h / 4294967296;
+  }
+
+  // ---------- 질병 ----------
+  // R0: 교실(30명, 학교 안 접촉) 기준 보정값. 상대 크기 순서(독감 < 노로 < 홍역)는 문헌을 따른다.
+  // routes: 전파 경로별 비중. presym: 증상 전(겉으론 멀쩡할 때) 전파 비중.
+  var DISEASES = {
+    flu: {
+      key: 'flu', name: '독감', R0: 2.4, days: 21,
+      dur: { E: [1, 1], P: [1, 2], I: [3, 5] },
+      presym: 0.35,
+      routes: { droplet: 0.55, contact: 0.35, air: 0.10, food: 0 },
+      vaccine: { coverage: 0.70, efficacy: 0.50 },
+      homeCut: 0.60
+    },
+    noro: {
+      key: 'noro', name: '노로바이러스', R0: 3.0, days: 15,
+      dur: { E: [1, 1], P: [1, 1], I: [2, 3] },
+      presym: 0.35,
+      routes: { contact: 0.60, food: 0.30, droplet: 0.10, air: 0 },
+      vaccine: null,
+      homeCut: 0.70
+    },
+    measles: {
+      key: 'measles', name: '홍역', R0: 15, days: 30,
+      dur: { E: [8, 10], P: [3, 3], I: [4, 5] },
+      presym: 0.45,
+      routes: { air: 0.85, droplet: 0.15, contact: 0, food: 0 },
+      vaccine: { coverage: 0.95, efficacy: 0.97 },
+      homeCut: 0.80
+    }
+  };
+
+  // ---------- 예방 카드: 경로별 남는 비율(1 = 효과 없음) ----------
+  var CARDS = {
+    soap:      { name: '비누로 30초 손씻기', mult: { contact: { flu: 0.40, noro: 0.25 } } },
+    sanitizer: { name: '손소독제 바르기',   mult: { contact: { flu: 0.45, noro: 0.65 } } },
+    cough:     { name: '기침할 땐 팔꿈치로', mult: { droplet: { flu: 0.70, noro: 0.70, measles: 0.75 } } },
+    mask:      { name: '마스크 쓰기',       mult: { droplet: { flu: 0.55, noro: 0.55, measles: 0.65 }, air: { flu: 0.80, measles: 0.85 } } },
+    window:    { name: '창문 열어 환기',     mult: { air: { flu: 0.50, measles: 0.50 }, droplet: { flu: 0.90, noro: 0.90, measles: 0.90 } } },
+    home:      { name: '아프면 집에서 쉬기', home: true },
+    vaccine:   { name: '예방접종',          vaccine: true },
+    food:      { name: '음식 익혀 먹기',     mult: { food: { noro: 0.10 } } }
+  };
+  var CARD_ORDER = ['soap', 'sanitizer', 'cough', 'mask', 'window', 'home', 'vaccine', 'food'];
+  var ROUTES = ['droplet', 'contact', 'air', 'food'];
+
+  function routeMult(dk, cards) {
+    var m = { droplet: 1, contact: 1, air: 1, food: 1 };
+    cards.forEach(function (c) {
+      var mm = CARDS[c].mult; if (!mm) return;
+      ROUTES.forEach(function (r) { if (mm[r] && mm[r][dk] != null) m[r] *= mm[r][dk]; });
+    });
+    return m;
+  }
+
+  function homeRemain(d) {
+    var s = 0, n = 0;
+    for (var k = d.dur.I[0]; k <= d.dur.I[1]; k++) { s += Math.min(1, (1 - d.homeCut) * k) / k; n++; }
+    return s / n;
+  }
+
+  // 분석적 실효재생산수(교실 전원 감수성 가정, 백신 반영) — 카드 효과 설명용
+  function reff(dk, cards) {
+    var d = DISEASES[dk], m = routeMult(dk, cards), s = 0;
+    ROUTES.forEach(function (r) { s += (d.routes[r] || 0) * m[r]; });
+    var stage = cards.indexOf('home') >= 0 ? d.presym + (1 - d.presym) * homeRemain(d) : 1;
+    var immune = (cards.indexOf('vaccine') >= 0 && d.vaccine) ? d.vaccine.coverage * d.vaccine.efficacy : 0;
+    return d.R0 * s * stage * (1 - immune);
+  }
+
+  // ---------- 좌석 ----------
+  function seatOf(i) { return { col: i % COLS, row: Math.floor(i / COLS) }; }
+  var DROPLET_W = (function () {
+    var W = [], L = 1.15;
+    for (var j = 0; j < N; j++) {
+      var row = [], sum = 0, a = seatOf(j);
+      for (var i = 0; i < N; i++) {
+        if (i === j) { row.push(0); continue; }
+        var b = seatOf(i), dx = a.col - b.col, dy = (a.row - b.row) * 1.15;
+        var w = Math.exp(-Math.sqrt(dx * dx + dy * dy) / L);
+        row.push(w); sum += w;
+      }
+      W.push(row.map(function (w) { return w / sum; }));
+    }
+    return W;
+  })();
+
+  function durPick(range, u) { return range[0] + Math.floor(u * (range[1] - range[0] + 1)); }
+
+  // ---------- 한 번의 실험 ----------
+  function simulate(dk, cards, seed) {
+    var d = DISEASES[dk], D = d.days;
+    var m = routeMult(dk, cards);
+    var useHome = cards.indexOf('home') >= 0, useVac = cards.indexOf('vaccine') >= 0 && !!d.vaccine;
+
+    // 처음 감염된 친구: 반 밖에서 옮아 온 친구(누구의 잘못도 아님). 좌석은 시드로 무작위.
+    var index = Math.floor(rnd(seed, 999, 0, 0) * N);
+
+    var A = [];
+    for (var i = 0; i < N; i++) {
+      var vacc = useVac && i !== index && rnd(seed, i, 1, 0) < d.vaccine.coverage;
+      var immune = vacc && rnd(seed, i, 2, 0) < d.vaccine.efficacy;
+      A.push({
+        id: i, vacc: vacc, immune: immune,
+        T: -Math.log(1 - rnd(seed, i, 0, 0)), H: 0,
+        dE: durPick(d.dur.E, rnd(seed, i, 3, 0)),
+        dP: durPick(d.dur.P, rnd(seed, i, 4, 0)),
+        dI: durPick(d.dur.I, rnd(seed, i, 5, 0)),
+        t: null, by: null, route: null
+      });
+    }
+    A[index].t = -A[index].dE; A[index].by = -1; A[index].route = 'outside';
+
+    function stageAt(a, day) {
+      if (a.t === null) return a.immune ? 'V' : 'S';
+      var x = day - a.t;
+      if (x < a.dE) return 'E';
+      if (x < a.dE + a.dP) return 'P';
+      if (x < a.dE + a.dP + a.dI) return 'I';
+      return 'R';
+    }
+    // '아프면 쉬기': 아픈 첫날 오전만 학교에 있다가 집으로(그 뒤로는 교실에 없음)
+    function infectiousness(a, st, day) {
+      if (st === 'P') return d.R0 * d.presym / a.dP;
+      if (st === 'I') {
+        var perDay = d.R0 * (1 - d.presym) / a.dI;
+        if (!useHome) return perDay;
+        var firstI = (day - a.t) === a.dE + a.dP;
+        return firstI ? perDay * Math.min(1, (1 - d.homeCut) * a.dI) : 0;
+      }
+      return 0;
+    }
+
+    var events = [];
+    for (var day = 0; day < D; day++) {
+      var inf = [];
+      for (var j = 0; j < N; j++) {
+        var st = stageAt(A[j], day), f = infectiousness(A[j], st, day);
+        if (f > 0) inf.push({ j: j, f: f });
+      }
+      if (!inf.length) continue;
+      var newly = [];
+      for (var i2 = 0; i2 < N; i2++) {
+        var a = A[i2];
+        if (a.t !== null || a.immune) continue;
+        var parts = [], h = 0;
+        for (var k = 0; k < inf.length; k++) {
+          var jj = inf[k].j, ff = inf[k].f;
+          for (var r = 0; r < ROUTES.length; r++) {
+            var rt = ROUTES[r], sh = d.routes[rt] || 0;
+            if (!sh) continue;
+            var w = rt === 'droplet' ? DROPLET_W[jj][i2] : 1 / (N - 1);
+            var c = ff * sh * w * m[rt];
+            if (c > 0) { parts.push({ j: jj, r: rt, c: c }); h += c; }
+          }
+        }
+        a.H += h;
+        if (a.H >= a.T) {
+          // 누가, 어떤 길로 옮겼는지: 기여도 비례 추첨
+          var u = rnd(seed, i2, 50 + day, 7) * h, acc = 0, pick = parts[parts.length - 1];
+          for (var q = 0; q < parts.length; q++) { acc += parts[q].c; if (u <= acc) { pick = parts[q]; break; } }
+          newly.push({ i: i2, j: pick.j, r: pick.r });
+        }
+      }
+      newly.forEach(function (e) {
+        A[e.i].t = day; A[e.i].by = e.j; A[e.i].route = e.r;
+        events.push({ day: day, to: e.i, from: e.j, route: e.r, phase: rnd(seed, e.i, 300 + day, 3) });
+      });
+    }
+
+    var series = [], peak = 0, peakDay = 0;
+    for (var dd = 0; dd <= D; dd++) {
+      var n = 0;
+      for (var z = 0; z < N; z++) if (stageAt(A[z], dd) === 'I') n++;
+      series.push(n);
+      if (n > peak) { peak = n; peakDay = dd; }
+    }
+    var total = A.filter(function (a) { return a.t !== null; }).length;
+    return {
+      disease: dk, cards: cards.slice(), seed: seed, index: index,
+      agents: A.map(function (a) {
+        return { id: a.id, vacc: a.vacc, immune: a.immune, t: a.t, by: a.by, route: a.route, dE: a.dE, dP: a.dP, dI: a.dI };
+      }),
+      events: events, series: series, peak: peak, peakDay: peakDay, total: total, days: D
+    };
+  }
+
+  function stageOf(agent, day) {
+    if (agent.t === null) return agent.immune ? 'V' : 'S';
+    var x = day - agent.t;
+    if (x < agent.dE) return 'E';
+    if (x < agent.dE + agent.dP) return 'P';
+    if (x < agent.dE + agent.dP + agent.dI) return 'I';
+    return 'R';
+  }
+
+  // ---------- 모든 3장 조합 ----------
+  function combos3() {
+    var out = [];
+    for (var a = 0; a < 8; a++) for (var b = a + 1; b < 8; b++) for (var c = b + 1; c < 8; c++)
+      out.push([CARD_ORDER[a], CARD_ORDER[b], CARD_ORDER[c]]);
+    return out;
+  }
+
+  var BEDS = 3;
+  var GOOD = 0.85, BAD = 1.35;
+
+  // 시드 고르기: 아무것도 안 하면 크게 퍼지고, 잘 고른 조합은 성공·엉뚱한 조합은 실패하는 반
+  function pickSeed(dk, startSeed, avoid) {
+    var cs = combos3(), best = null, bestBad = 1e9;
+    for (var t = 0; t < 400; t++) {
+      var seed = (startSeed + t * 7919) >>> 0;
+      var base = simulate(dk, [], seed);
+      if (avoid != null && base.index === avoid) continue;
+      if (base.peak < BEDS * 2 + 1 || base.total < 18) continue;
+      var bad = 0, rows = [];
+      for (var k = 0; k < cs.length; k++) {
+        var R = reff(dk, cs[k]);
+        var res = simulate(dk, cs[k], seed), ok = res.peak <= BEDS;
+        rows.push({ R: R, ok: ok });
+        if ((R <= GOOD && !ok) || (R >= BAD && ok)) bad++;
+      }
+      // 일관성: 더 약한 조합(퍼지는 힘이 0.15 이상 큰 조합)이 성공하는데 더 센 조합이 실패하면 안 됨
+      for (var x = 0; x < rows.length && !bad; x++) {
+        if (rows[x].ok) continue;
+        for (var y = 0; y < rows.length; y++) if (rows[y].ok && rows[y].R > rows[x].R + 0.15) { bad++; break; }
+      }
+      if (bad === 0) return { seed: seed, tries: t + 1, violations: 0 };
+      if (bad < bestBad) { bestBad = bad; best = seed; }
+    }
+    return { seed: best, tries: 400, violations: bestBad };
+  }
+
+  var api = {
+    N: N, COLS: COLS, ROWS: ROWS, DISEASES: DISEASES, CARDS: CARDS, CARD_ORDER: CARD_ORDER,
+    BEDS: BEDS, GOOD: GOOD, BAD: BAD,
+    simulate: simulate, stageOf: stageOf, reff: reff, routeMult: routeMult, combos3: combos3,
+    pickSeed: pickSeed, rnd: rnd, seatOf: seatOf, homeRemain: homeRemain
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.LabEngine = api;
+})(this);
+</script>
+<script>
+(function(){
+'use strict';
+var E = window.LabEngine;
+var $ = function(s){ return document.querySelector(s); };
+var clamp = function(v,a,b){ return v<a?a:v>b?b:v; };
+var lerp = function(a,b,t){ return a+(b-a)*t; };
+var ease = function(t){ t=clamp(t,0,1); return t*t*(3-2*t); };
+var REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+var store = {
+  get:function(k){ try{ var v=localStorage.getItem('infection-lab:'+k); return v?JSON.parse(v):null; }catch(e){ return null; } },
+  set:function(k,v){ try{ localStorage.setItem('infection-lab:'+k, JSON.stringify(v)); }catch(e){} }
+};
+
+/* ---------- 아이콘 ---------- */
+var ICON = {
+  soap:'<rect x="3" y="11" width="15" height="9" rx="3"/><path d="M6 11V9.5A2.5 2.5 0 0 1 8.5 7h4A2.5 2.5 0 0 1 15 9.5V11"/><circle cx="19" cy="6" r="2"/><circle cx="15.5" cy="3.5" r="1.3"/><circle cx="21" cy="11" r="1.2"/>',
+  sanitizer:'<path d="M9 9h6l1 3v8a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-8z"/><path d="M11 9V6h2v3"/><path d="M10 4h6"/><path d="M16 4v2"/><path d="M10 15h4"/>',
+  cough:'<circle cx="9" cy="9" r="5"/><path d="M3 21c1-3.5 3.6-5.5 6-5.5"/><path d="M8 14.5c2.5 0 6-1 9.5-3.5 1.4-1 3-.2 3 1.3 0 1-.6 1.7-1.6 2.2L12 18"/><path d="M7.5 8.3h.01M10.5 8.3h.01"/>',
+  mask:'<path d="M4 9c2.5-1 5.2-1.5 8-1.5S17.5 8 20 9v4c0 3-3.6 5.5-8 5.5S4 16 4 13z"/><path d="M4 10.5H2.5a1.5 1.5 0 0 0 0 3H4"/><path d="M20 10.5h1.5a1.5 1.5 0 0 1 0 3H20"/><path d="M8 11.5h8M8.5 14.5h7"/>',
+  window:'<rect x="3" y="3" width="11" height="18" rx="1.5"/><path d="M8.5 3v18M3 12h11"/><path d="M16 7c2 0 3 1 5 1"/><path d="M16 12c2 0 3 1 5 1"/><path d="M16 17c2 0 3 1 5 1"/>',
+  home:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5h4v5"/>',
+  vaccine:'<path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.5 19.5 4.5 15.5 15 5z"/><path d="m9 11 2 2M12 8l2 2"/><path d="M4.5 19.5 2 22"/>',
+  food:'<path d="M3 12h18v2a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6z"/><path d="M2 12h20"/><path d="M8 8c0-1.5 1.2-1.5 1.2-3S8 3.5 8 3.5M12 8c0-1.5 1.2-1.5 1.2-3S12 3.5 12 3.5M16 8c0-1.5 1.2-1.5 1.2-3S16 3.5 16 3.5"/>',
+  droplet:'<path d="M9 3.5s-4 4.6-4 7.5a4 4 0 0 0 8 0c0-2.9-4-7.5-4-7.5z"/><path d="M17.5 9s-2.5 2.8-2.5 4.6a2.5 2.5 0 0 0 5 0C20 11.8 17.5 9 17.5 9z"/><circle cx="16" cy="20" r="1.2"/>',
+  contact:'<path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V11"/><path d="M11 10V4a1.5 1.5 0 0 1 3 0v6"/><path d="M14 10V5a1.5 1.5 0 0 1 3 0v7"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0V15a7 7 0 0 1-7 7h-1a6 6 0 0 1-5-2.7L4.2 15a1.5 1.5 0 0 1 2.5-1.7L8 15"/>',
+  air:'<path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h7"/>',
+  lens:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/><path d="M8 9.5a3 3 0 0 1 3-2.5"/>',
+  tree:'<circle cx="5" cy="12" r="2"/><circle cx="18" cy="5" r="2"/><circle cx="18" cy="19" r="2"/><circle cx="13" cy="12" r="1.6"/><path d="M7 12h4.4M14.3 11l2.4-4.4M14.3 13l2.4 4.4"/>',
+  play:'<path d="M7 4.5v15l12-7.5z"/>',
+  pause:'<path d="M8 4.5v15M16 4.5v15"/>',
+  bed:'<path d="M3 18V7"/><path d="M3 14h18v4"/><path d="M21 14v-2.5A2.5 2.5 0 0 0 18.5 9H11v5"/><circle cx="7" cy="11" r="2"/>',
+  star:'<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  outside:'<path d="M14 4h5v16h-5"/><path d="M3 12h11M9 7l5 5-5 5"/>',
+  back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',
+  replay:'<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M10 9v6l5-3z"/>'
+};
+function svg(name, extra){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"'+(extra||'')+'>'+ICON[name]+'</svg>';
+}
+function svgFilled(name, fill){ return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+ICON[name].match(/d="([^"]+)"/)[1]+'" fill="'+fill+'" stroke="'+fill+'" stroke-width="1.5" stroke-linejoin="round"/></svg>'; }
+
+/* ---------- 학생에게 보여 줄 내용 ---------- */
+var ROUTE_NAME = { droplet:'기침 침방울', contact:'손·물건', air:'공기', food:'음식' };
+var CARD_TEXT = {
+  soap:'흐르는 물에 비누로 구석구석 30초',
+  sanitizer:'알코올 손소독제를 손에 문질러요',
+  cough:'기침·재채기는 팔꿈치 안쪽으로',
+  mask:'반 친구 모두 마스크를 써요',
+  window:'쉬는 시간마다 창문을 활짝',
+  home:'열나거나 토하면 집에서 쉬어요',
+  vaccine:'걸리기 전에 몸속에 방패를 만들어요',
+  food:'음식을 충분히 익혀서 먹어요'
+};
+var INFO = {
+  flu:{ n:1, title:'독감', full:'인플루엔자(독감)',
+    routes:[['droplet','가장 많이'],['contact','조금'],['air','아주 조금']],
+    inc:'1~4일', sym:'갑자기 오르는 높은 열, 기침, 목 아픔, 온몸이 쑤셔요.',
+    tip:'아프기 하루쯤 전부터, 겉으로는 멀쩡할 때도 옮길 수 있어요.',
+    learn:['기침·재채기는 팔꿈치로 가리고, 기침이 나면 마스크를 써요.','비누로 30초 손을 씻어요.','열이 나면 집에서 쉬어요. 열이 내리고 하루(24시간)가 지나면 등교해요.','해마다 가을에 독감 예방접종을 맞아요.'],
+    real:'독감은 거의 해마다 겨울과 봄에 학교에서 유행해요. 바이러스가 조금씩 바뀌어서 예방접종은 해마다 새로 맞아요.',
+    hints:['독감은 무엇으로 가장 많이 퍼졌나요? 관찰 질문의 답을 떠올려 보세요. 침방울을 막는 카드가 있어요.','아픈 친구가 계속 학교에 오면 병균도 계속 와요. 아픈 친구를 쉬게 하거나, 미리 몸에 방패를 만드는 카드도 있어요.','이렇게 해 보세요: 마스크 쓰기 + 아프면 집에서 쉬기 + 비누로 30초 손씻기'] },
+  noro:{ n:2, title:'노로바이러스', full:'노로바이러스 장염',
+    routes:[['contact','가장 많이'],['food','많이'],['droplet','조금(토할 때)']],
+    inc:'12~48시간', sym:'토하고, 설사하고, 배가 아파요.',
+    tip:'아주 적은 양으로도 옮아요. 그리고 알코올 손소독제로는 잘 없어지지 않아요!',
+    learn:['흐르는 물에 비누로 30초 이상 손을 씻어요.','음식은 85℃에서 1분 이상 익혀 먹어요.','토하거나 설사하면 증상이 끝나고 48시간(이틀)까지 집에서 쉬어요.'],
+    real:'노로바이러스는 겨울철 식중독의 대표 원인이에요. 아직 학교에서 맞는 예방접종은 없어요.',
+    hints:['노로바이러스는 주로 손·물건과 음식으로 퍼져요.','손소독제를 골랐나요? 노로바이러스는 알코올에 강해서, 비누와 흐르는 물로 씻어 내야 해요.','이렇게 해 보세요: 비누로 30초 손씻기 + 음식 익혀 먹기 + 아프면 집에서 쉬기'] },
+  measles:{ n:3, title:'홍역', full:'홍역',
+    routes:[['air','가장 많이'],['droplet','조금']],
+    inc:'7~21일 (보통 10~12일)', sym:'열, 기침, 콧물, 빨개진 눈 → 며칠 뒤 온몸에 붉은 발진이 돋아요.',
+    tip:'발진이 생기기 4일 전부터 옮겨서, 감기인 줄 알고 학교에 오기 쉬워요. 기침한 사람이 떠나도 공기 속에 최대 2시간 남아 있어요.',
+    learn:['MMR 예방접종을 두 번(돌 무렵, 만 4~6세) 맞아요. 두 번 맞으면 약 97% 예방돼요.','창문을 열어 자주 환기해요.','열과 발진이 나면 집에서 쉬고 병원에 가요.'],
+    real:'1978년 미국의 한 초등학교에서는 홍역에 걸린 학생 한 명에게서 14개 교실, 28명에게 퍼졌어요. 환기 장치가 교실 공기를 다시 돌렸기 때문이에요.',
+    hints:['홍역은 공기로 퍼져서 교실 전체가 위험해요. 손을 씻어도 공기는 막을 수 없어요.','홍역은 아프기 전부터 옮겨요. 아파서 쉬면 이미 늦을 때가 많아요. 병에 걸리기 전에 미리 할 수 있는 카드는?','이렇게 해 보세요: 예방접종 + 창문 열어 환기 + 아프면 집에서 쉬기'] }
+};
+var ORDER = ['flu','noro','measles'];
+var STEP_NAMES = ['알아보기','아무것도 안 하면?','관찰 질문','카드 고르기','결과'];
+
+function cardWhy(dk, c){
+  var R0 = E.DISEASES[dk].R0, eff = 1 - E.reff(dk,[c])/R0;
+  var tier = eff >= 0.30 ? 'great' : eff >= 0.12 ? 'ok' : eff >= 0.025 ? 'little' : 'none';
+  var label = {great:'아주 잘 통해요', ok:'통해요', little:'조금 통해요', none:'이 병엔 거의 안 통해요'}[tier];
+  var why = '';
+  if (c==='vaccine' && dk==='noro') why = '노로바이러스는 아직 학교에서 맞는 백신이 없어요.';
+  else if (c==='vaccine' && dk==='measles') why = '두 번 맞으면 약 97% 예방돼요. 접종을 못 한 친구까지 함께 지켜요.';
+  else if (c==='vaccine') why = '반 친구 10명 중 7명이 맞았다고 해 봤어요. 독감 백신은 걸릴 위험을 절반쯤 줄여요.';
+  else if (c==='food' && dk!=='noro') why = '이 병은 음식으로는 잘 옮지 않아요.';
+  else if (c==='food') why = '익히면 음식 속 바이러스가 없어져요.';
+  else if ((c==='soap'||c==='sanitizer') && dk==='measles') why = '홍역은 공기로 퍼져서 손씻기로는 막기 어려워요.';
+  else if (c==='sanitizer' && dk==='noro') why = '노로바이러스는 알코올에 강해서 비누보다 훨씬 덜 없어져요.';
+  else if (c==='soap' && dk==='noro') why = '비누 거품과 흐르는 물이 손에 붙은 바이러스를 씻어 내요.';
+  else if (c==='home' && dk==='measles') why = '홍역은 아프기 전부터 옮겨서 쉬기만으로는 늦어요.';
+  else if (c==='home') why = '아픈 친구가 교실에 없으면 병균도 덜 와요.';
+  else if (c==='window' && dk==='measles') why = '공기 속 바이러스를 밖으로 내보내요. 하지만 혼자서는 홍역을 못 막아요.';
+  else if (c==='window' && dk==='noro') why = '노로바이러스는 공기로는 잘 퍼지지 않아요.';
+  else if (c==='window') why = '독감은 공기보다 침방울로 더 많이 퍼져요.';
+  else if ((c==='mask'||c==='cough') && dk==='noro') why = '노로바이러스는 기침보다 손과 음식으로 퍼져요.';
+  else if (c==='mask'||c==='cough') why = dk==='measles' ? '침방울은 막지만 공기 속 바이러스는 다 못 막아요.' : '기침 침방울이 멀리 날아가지 않게 막아요.';
+  else if (c==='soap'||c==='sanitizer') why = '손에 묻은 바이러스를 없애요.';
+  return {tier:tier, label:label, why:why, eff:eff};
+}
+
+/* ---------- 색 (테마 토큰) ---------- */
+var C = {};
+function readColors(){
+  var cs = getComputedStyle(document.documentElement);
+  ['paper','sheet','ink','ink-soft','accent','stamp','germ','uv','healthy','latent','sick','recovered','shield','floor','floor-line','wall','desk','desk-edge','board','chalk','rule'].forEach(function(k){ C[k] = cs.getPropertyValue('--'+k).trim(); });
+}
+readColors();
+if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(){ readColors(); });
+new MutationObserver(function(){ readColors(); }).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+
+/* ---------- 교실 그리기 ---------- */
+var W = 960, H = 640;
+var SKIN = ['#F6D3B3','#EDC29C','#E1AE85','#F3CBA6','#D9A178','#F0C7A0'];
+var HAIR = ['#2B2A31','#4A3427','#6A4A2E','#1E2330','#83552F','#3A2B22'];
+function seat(i){ var s = E.seatOf(i); return { x: 190 + s.col*116, y: 158 + s.row*92 }; }
+var LOOK = []; for (var li=0; li<30; li++) LOOK.push({ skin:SKIN[Math.floor(E.rnd(4242,li,1,0)*SKIN.length)], hair:HAIR[Math.floor(E.rnd(4242,li,2,0)*HAIR.length)], style:Math.floor(E.rnd(4242,li,3,0)*4), bob:E.rnd(4242,li,4,0)*6.28 });
+var SPOT = {
+  door:{x:908,y:118}, ball:{x:70,y:588}, sink:{x:888,y:360}, sanitizer:{x:908,y:262}, counter:{x:480,y:584}, outside:{x:972,y:118}
+};
+var WIN = [[130,210],[290,370],[450,530]];
+
+function Room(canvas){
+  this.cv = canvas; this.ctx = canvas.getContext('2d');
+  this.res = null; this.ghost = null; this.t = 0; this.uv = false; this.tree = true; this.me = null; this.idle = true;
+  this.protectedSet = null; this.protectedAt = 0; this.shieldSaved = null; this.pickMode = false; this.hover = -1;
+  this.planCache = {};
+  this.fit();
+}
+Room.prototype.fit = function(){
+  var dpr = Math.min(2, window.devicePixelRatio||1);
+  this.cv.width = W*dpr; this.cv.height = H*dpr; this.dpr = dpr;
+};
+Room.prototype.setResult = function(res){
+  this.res = res; this.planCache = {}; this.protectedSet = null; this.shieldSaved = null;
+  if (!res){ this.flags = {}; this.ev = []; this.active = null; return; }
+  var cards = res.cards, home = cards.indexOf('home')>=0;
+  this.flags = { soap: cards.indexOf('soap')>=0, sanitizer: cards.indexOf('sanitizer')>=0, mask: cards.indexOf('mask')>=0,
+    cough: cards.indexOf('cough')>=0, window: cards.indexOf('window')>=0, home: home, vaccine: cards.indexOf('vaccine')>=0 && !!E.DISEASES[res.disease].vaccine, food: cards.indexOf('food')>=0 };
+  var self = this, A = res.agents;
+  // 감염이 '눈에 보이는' 시각(하루 안에서)
+  var WINS = { droplet:[[.05,.26],[.42,.56]], contact:[[.30,.35],[.81,.86]], food:[[.63,.74]], air:[[.05,.92]] };
+  var MORNING = { droplet:[[.04,.24]], contact:[[.05,.12]], food:[[.05,.12]], air:[[.04,.24]] };
+  var DUR = { droplet:.10, contact:.16, food:.13, air:.15 };
+  this.ev = res.events.map(function(e){
+    var src = A[e.from], st = E.stageOf(src, e.day);
+    var firstI = home && st==='I' && (e.day - src.t) === src.dE + src.dP;
+    var wins = firstI ? MORNING[e.route] : WINS[e.route], tot = 0;
+    wins.forEach(function(w){ tot += w[1]-w[0]; });
+    var u = e.phase*tot, time = wins[0][0];
+    for (var k=0;k<wins.length;k++){ var len = wins[k][1]-wins[k][0]; if (u <= len){ time = wins[k][0]+u; break; } u -= len; }
+    return { day:e.day, from:e.from, to:e.to, route:e.route, te:e.day+time, dur:DUR[e.route] };
+  });
+  this.infAt = A.map(function(a){ return null; });
+  A.forEach(function(a, i){ if (a.t !== null && a.t < 0) self.infAt[i] = a.t; });
+  this.ev.forEach(function(e){ self.infAt[e.to] = e.te + e.dur; });
+  var act = []; for (var d=0; d<=res.days; d++) act.push(false);
+  this.ev.forEach(function(e){ act[e.day] = true; });
+  A.forEach(function(a){ if (a.t === null) return; [a.t, a.t+a.dE, a.t+a.dE+a.dP, a.t+a.dE+a.dP+a.dI].forEach(function(x){ if (x>=0 && x<=res.days) act[x] = true; }); });
+  this.active = act;
+};
+Room.prototype.visState = function(i, t){
+  if (!this.res) return 'S';
+  var a = this.res.agents[i], day = Math.floor(t);
+  if (a.t === null) return a.immune ? 'V' : 'S';
+  if (this.infAt[i] !== null && t < this.infAt[i]) return a.immune ? 'V' : 'S';
+  return E.stageOf(a, Math.min(day, this.res.days));
+};
+Room.prototype.presence = function(i, day){
+  if (!this.res || !this.flags.home) return 'class';
+  var a = this.res.agents[i];
+  if (a.t === null) return 'class';
+  var x = day - a.t, s0 = a.dE + a.dP, s1 = s0 + a.dI;
+  if (x === s0) return 'leaving';
+  if (x > s0 && x < s1) return 'home';
+  if (x === s1) return 'returning';
+  return 'class';
+};
+Room.prototype.plan = function(i, day){
+  var key = i+':'+day; if (this.planCache[key]) return this.planCache[key];
+  var s = seat(i), f = this.flags || {}, r = function(k){ return E.rnd(9001, i, day, k); };
+  function target(k){
+    var u = r(k);
+    if (f.soap && u < .62) return { x: SPOT.sink.x - 30 - r(k+10)*70, y: SPOT.sink.y - 40 + r(k+11)*80 };
+    if (f.sanitizer && u < .62) return { x: SPOT.sanitizer.x - 24 - r(k+10)*60, y: SPOT.sanitizer.y - 30 + r(k+11)*60 };
+    if (u < .78) { var ax = 248 + Math.floor(r(k+12)*6)*116 - 58*(r(k+13)<.5?0:1); return { x: clamp(ax,110,860), y: 120 + r(k+14)*440 }; }
+    if (u < .9) return { x: SPOT.door.x - 18 - r(k+10)*30, y: SPOT.door.y - 14 + r(k+11)*28 };
+    return { x: SPOT.ball.x + 20 + r(k+10)*60, y: SPOT.ball.y - 30 - r(k+11)*30 };
+  }
+  var sp = E.seatOf(i), L = sp.row*.024 + sp.col*.004 + r(5)*.006;
+  var T1 = target(1), T2 = target(2), Cn = { x: 360 + sp.col*46 + r(6)*14, y: 560 + r(7)*10 };
+  var d1 = r(3)*.02, d2 = r(4)*.02;
+  var wp = [[0,s],[.28+d1,s],[.315+d1,T1],[.355,T1],[.395,s],[.585+L,s],[.61+L,Cn],[.625+L,Cn],[.655+L,s],[.80+d2,s],[.835+d2,T2],[.865,T2],[.895,s],[1,s]];
+  this.planCache[key] = wp; return wp;
+};
+Room.prototype.pos = function(i, t){
+  var day = Math.floor(t), f = t - day, s = seat(i);
+  if (!this.res || this.idle) {
+    if (this.idle && this.res === null && !this.pickMode) { var wp0 = this.plan(i, day); return interp(wp0, f); }
+    return s;
+  }
+  var pr = this.presence(i, day), st = this.visState(i, t);
+  if (pr === 'home') return null;
+  if (pr === 'leaving') { if (f < .30) return s; if (f > .40) return null; return mix(s, SPOT.outside, ease((f-.30)/.10)); }
+  if (pr === 'returning') { if (f < .03) return null; if (f < .12) return mix(SPOT.outside, s, ease((f-.03)/.09)); }
+  if (st === 'I') return s;
+  return interp(this.plan(i, day), f);
+};
+function mix(a,b,t){ return { x: lerp(a.x,b.x,t), y: lerp(a.y,b.y,t) }; }
+function interp(wp, f){
+  for (var k=0;k<wp.length-1;k++){
+    if (f >= wp[k][0] && f <= wp[k+1][0]){
+      var a = wp[k][1], b = wp[k+1][1]; if (a===b) return a;
+      return mix(a, b, ease((f-wp[k][0])/(wp[k+1][0]-wp[k][0])));
+    }
+  }
+  return wp[wp.length-1][1];
+}
+
+Room.prototype.draw = function(now){
+  var ctx = this.ctx, d = this.dpr, t = this.t;
+  ctx.setTransform(d,0,0,d,0,0);
+  ctx.clearRect(0,0,W,H);
+  this.drawRoom(ctx, t);
+  var self = this, res = this.res;
+  var day = Math.floor(t), f = t - day;
+  // 공기 안개
+  if (res && !this.idle) this.drawHaze(ctx, t);
+  // 감염 길(계보도)
+  if (res && this.tree && !this.idle) this.drawTree(ctx, t);
+  // 친구들
+  var order = [];
+  for (var i=0;i<30;i++){ var p = this.pos(i, t); if (p) order.push({i:i,p:p}); }
+  order.sort(function(a,b){ return a.p.y - b.p.y; });
+  order.forEach(function(o){ self.drawKid(ctx, o.i, o.p, t, now); });
+  // 효과
+  if (res && !this.idle) { this.drawEffects(ctx, t); this.drawAmbient(ctx, t, now); }
+  // 돋보기(블랙라이트)
+  if (this.uv) this.drawUV(ctx, t, order, now);
+  // 지킨 친구 반짝임
+  if (this.protectedSet && !this.idle) this.drawProtected(ctx, now);
+  // 칠판 글씨
+  this.drawBoardText(ctx, t);
+};
+Room.prototype.drawRoom = function(ctx, t){
+  ctx.fillStyle = C.wall; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle = C.floor; roundRect(ctx, 18,18,W-36,H-36,10); ctx.fill();
+  ctx.strokeStyle = C['floor-line']; ctx.lineWidth = 1;
+  for (var x=18; x<W-18; x+=46){ ctx.beginPath(); ctx.moveTo(x,18); ctx.lineTo(x,H-18); ctx.stroke(); }
+  for (var y=18; y<H-18; y+=46){ ctx.beginPath(); ctx.moveTo(18,y); ctx.lineTo(W-18,y); ctx.stroke(); }
+  // 칠판
+  ctx.fillStyle = C['desk-edge']; roundRect(ctx, 316,22,328,52,6); ctx.fill();
+  ctx.fillStyle = C.board; roundRect(ctx, 322,26,316,44,4); ctx.fill();
+  // 교탁
+  ctx.fillStyle = C.desk; roundRect(ctx, 432,84,96,22,5); ctx.fill(); ctx.strokeStyle = C['desk-edge']; ctx.lineWidth=2; ctx.stroke();
+  // 창문
+  var open = this.flags && this.flags.window && this.res && !this.idle;
+  WIN.forEach(function(w){
+    ctx.fillStyle = '#BFE3F5'; ctx.fillRect(6, w[0], 16, w[1]-w[0]);
+    ctx.strokeStyle = '#7FA6BC'; ctx.lineWidth = 2; ctx.strokeRect(6, w[0], 16, w[1]-w[0]);
+    if (open){ ctx.fillStyle = '#7FA6BC'; ctx.save(); ctx.translate(22, w[0]); ctx.rotate(-0.6); ctx.fillRect(0,0,4,(w[1]-w[0])/2); ctx.restore(); }
+    else { ctx.beginPath(); ctx.moveTo(14,w[0]); ctx.lineTo(14,w[1]); ctx.stroke(); }
+  });
+  // 문
+  ctx.fillStyle = C['desk-edge']; ctx.fillRect(W-22, 70, 16, 96);
+  ctx.fillStyle = C.desk; ctx.fillRect(W-20, 74, 12, 88);
+  // 손소독제
+  ctx.fillStyle = '#9FD3E6'; roundRect(ctx, W-30, 244, 14, 34, 4); ctx.fill(); ctx.strokeStyle = '#5E93A8'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle = '#5E93A8'; ctx.fillRect(W-32, 240, 18, 5);
+  // 세면대
+  ctx.fillStyle = '#DDE6EC'; roundRect(ctx, W-58, 318, 40, 84, 10); ctx.fill(); ctx.strokeStyle = '#8EA3B2'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#B9D7E8'; roundRect(ctx, W-52, 330, 28, 60, 8); ctx.fill();
+  if (this.flags && this.flags.soap && this.res && !this.idle){ ctx.fillStyle = '#F7C9DE'; roundRect(ctx, W-50, 304, 22, 10, 4); ctx.fill(); }
+  // 학급 공
+  ctx.fillStyle = '#F1B44C'; ctx.beginPath(); ctx.arc(SPOT.ball.x, SPOT.ball.y, 14, 0, 6.28); ctx.fill();
+  ctx.strokeStyle = '#B9822A'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(SPOT.ball.x, SPOT.ball.y, 14, 0, 6.28); ctx.moveTo(SPOT.ball.x-14,SPOT.ball.y); ctx.quadraticCurveTo(SPOT.ball.x, SPOT.ball.y-8, SPOT.ball.x+14, SPOT.ball.y); ctx.stroke();
+  // 배식대
+  ctx.fillStyle = C['desk-edge']; roundRect(ctx, 356, 586, 248, 30, 7); ctx.fill();
+  ctx.fillStyle = C.desk; roundRect(ctx, 360, 589, 240, 24, 6); ctx.fill();
+  ctx.fillStyle = '#C0CDD6'; ctx.beginPath(); ctx.ellipse(480, 598, 26, 11, 0, 0, 6.28); ctx.fill();
+  ctx.fillStyle = '#E8EEF2'; ctx.beginPath(); ctx.ellipse(480, 596, 20, 7, 0, 0, 6.28); ctx.fill();
+  if (this.flags && this.flags.food && this.res && !this.idle){
+    ctx.strokeStyle = 'rgba(160,170,180,.8)'; ctx.lineWidth = 2;
+    for (var k=0;k<3;k++){ var sx = 470 + k*10, ph = (t*3 + k)%1; ctx.beginPath(); ctx.moveTo(sx, 588); ctx.quadraticCurveTo(sx-5, 580-ph*6, sx, 572-ph*8); ctx.stroke(); }
+    ctx.fillStyle = C.ink; ctx.font = '13px '+fontHand(); ctx.textAlign='left'; ctx.fillText('85℃ 1분', 510, 604);
+  }
+  // 책상
+  for (var i=0;i<30;i++){ var s = seat(i); ctx.fillStyle = C['desk-edge']; roundRect(ctx, s.x-40, s.y-38, 80, 26, 5); ctx.fill(); ctx.fillStyle = C.desk; roundRect(ctx, s.x-38, s.y-36, 76, 21, 4); ctx.fill(); }
+  // 집에서 쉬는 중 표시
+  if (this.res && this.flags.home && !this.idle){
+    var day = Math.floor(t);
+    for (var j=0;j<30;j++){ var pr = this.presence(j, day); if (pr==='home' || (pr==='leaving' && t-day>.4) || (pr==='returning' && t-day<.03)){ var sj = seat(j); drawHouse(ctx, sj.x, sj.y, C['ink-soft']); } }
+  }
+  // 문 손잡이 + 오염 표시
+  ctx.fillStyle = '#8E8E8E'; ctx.beginPath(); ctx.arc(W-24, 118, 5, 0, 6.28); ctx.fill();
+};
+function drawHouse(ctx, x, y, col){
+  ctx.save(); ctx.globalAlpha = .6; ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+  ctx.beginPath(); ctx.moveTo(x-11, y+1); ctx.lineTo(x, y-9); ctx.lineTo(x+11, y+1); ctx.moveTo(x-8, y-1); ctx.lineTo(x-8, y+11); ctx.lineTo(x+8, y+11); ctx.lineTo(x+8, y-1); ctx.stroke(); ctx.restore();
+}
+function roundRect(ctx, x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fontHand(){ return '"Gaegu", "Gowun Dodum", sans-serif'; }
+function fontDisp(){ return '"Jua", "Gowun Dodum", sans-serif'; }
+
+Room.prototype.drawBoardText = function(ctx, t){
+  ctx.fillStyle = C.chalk; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = '22px '+fontDisp();
+  var txt;
+  if (!this.res || this.idle) txt = this.boardIdle || '우리 반 30명';
+  else { var day = Math.min(Math.floor(this.t)+1, this.res.days); txt = this.boardTitle + ' · ' + day + '일째'; }
+  ctx.fillText(txt, 480, 49);
+  ctx.textBaseline = 'alphabetic';
+};
+Room.prototype.drawKid = function(ctx, i, p, t, now){
+  var look = LOOK[i], st = this.visState(i, t), f = this.flags || {}, res = this.res, idle = this.idle;
+  var bob = REDUCED ? 0 : Math.sin(now/520 + look.bob) * 1.2;
+  var x = p.x, y = p.y + bob, R = 15;
+  var body = C.healthy;
+  if (!idle && res){ if (st==='I') body = C.sick; else if (st==='R') body = C.recovered; }
+  // 몸
+  ctx.fillStyle = body; ctx.beginPath(); ctx.ellipse(x, y+16, 17, 12, 0, Math.PI, 0); ctx.lineTo(x+17, y+22); ctx.lineTo(x-17, y+22); ctx.closePath(); ctx.fill();
+  // 방패(예방접종)
+  if (!idle && res && f.vaccine && res.agents[i].vacc){
+    ctx.strokeStyle = C.shield; ctx.lineWidth = 3; ctx.globalAlpha = .85;
+    ctx.beginPath(); ctx.arc(x, y+2, 24, 0, 6.28); ctx.stroke(); ctx.globalAlpha = .12; ctx.fillStyle = C.shield; ctx.fill(); ctx.globalAlpha = 1;
+  }
+  // 얼굴
+  ctx.fillStyle = look.skin; ctx.beginPath(); ctx.arc(x, y, R, 0, 6.28); ctx.fill();
+  // 머리카락
+  ctx.fillStyle = look.hair; ctx.beginPath();
+  if (look.style===0){ ctx.arc(x, y-2, R+1, Math.PI*1.05, Math.PI*1.95); ctx.closePath(); }
+  else if (look.style===1){ ctx.arc(x, y-1, R+1.5, Math.PI*.95, Math.PI*2.05); ctx.lineTo(x+R, y+6); ctx.lineTo(x+R-4, y-4); ctx.lineTo(x-R+4, y-4); ctx.lineTo(x-R, y+6); ctx.closePath(); }
+  else if (look.style===2){ ctx.arc(x, y-2, R+1, Math.PI, 0); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.arc(x+R-1, y-R+2, 5, 0, 6.28); }
+  else { ctx.arc(x, y-3, R, Math.PI*1.1, Math.PI*1.9); ctx.lineTo(x+4, y-8); ctx.lineTo(x-6, y-6); ctx.closePath(); }
+  ctx.fill();
+  // 표정
+  var sick = !idle && res && st==='I';
+  ctx.fillStyle = '#2A2320';
+  if (sick){ ctx.strokeStyle = '#2A2320'; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(x-7, y+1); ctx.lineTo(x-3, y+2); ctx.moveTo(x+7, y+1); ctx.lineTo(x+3, y+2); ctx.stroke(); }
+  else { ctx.beginPath(); ctx.arc(x-5, y+1, 1.9, 0, 6.28); ctx.arc(x+5, y+1, 1.9, 0, 6.28); ctx.fill(); }
+  ctx.fillStyle = sick ? 'rgba(232,80,60,.55)' : 'rgba(240,130,120,.35)';
+  ctx.beginPath(); ctx.arc(x-9, y+6, 3, 0, 6.28); ctx.arc(x+9, y+6, 3, 0, 6.28); ctx.fill();
+  if (!idle && res && f.mask && st!=='R'){
+    ctx.fillStyle = '#FFFFFF'; ctx.strokeStyle = '#B8C4CF'; ctx.lineWidth = 1; roundRect(ctx, x-9, y+3, 18, 9, 4); ctx.fill(); ctx.stroke();
+  } else {
+    ctx.strokeStyle = '#2A2320'; ctx.lineWidth = 1.6; ctx.beginPath();
+    if (sick) { ctx.arc(x, y+10, 3, Math.PI*1.15, Math.PI*1.85); } else { ctx.arc(x, y+6, 3.2, Math.PI*.15, Math.PI*.85); }
+    ctx.stroke();
+  }
+  if (sick){ ctx.fillStyle = '#7EC8F0'; ctx.beginPath(); ctx.moveTo(x+12, y-12); ctx.quadraticCurveTo(x+16, y-6, x+12, y-4); ctx.quadraticCurveTo(x+8, y-6, x+12, y-12); ctx.fill(); }
+  if (!idle && res && st==='R'){ ctx.fillStyle = C.recovered; ctx.beginPath(); ctx.arc(x+12, y-12, 6, 0, 6.28); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x+9, y-12); ctx.lineTo(x+11.5, y-9.5); ctx.lineTo(x+15, y-14.5); ctx.stroke(); }
+  // 나
+  if (this.me === i){
+    ctx.fillStyle = C.ink; roundRect(ctx, x-14, y-36, 28, 17, 8); ctx.fill();
+    ctx.fillStyle = C.sheet; ctx.font = '13px '+fontDisp(); ctx.textAlign='center'; ctx.fillText('나', x, y-23.5);
+  }
+  if (this.pickMode && this.hover === i){ ctx.strokeStyle = C.accent; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x, y+3, 26, 0, 6.28); ctx.stroke(); }
+};
+var TREE_DASH = { droplet:[], contact:[7,4], food:[0.1,6], air:[10,3,2,3] };
+Room.prototype.drawTree = function(ctx, t){
+  var self = this;
+  ctx.save(); ctx.lineWidth = 2; ctx.strokeStyle = C.germ; ctx.fillStyle = C.germ;
+  this.ev.forEach(function(e){
+    if (t < e.te + e.dur) return;
+    var a = seat(e.from), b = seat(e.to);
+    var k = clamp((t - (e.te+e.dur))/0.25, 0, 1);
+    ctx.globalAlpha = 0.22 + 0.38*k;
+    var mx = (a.x+b.x)/2 + (b.y-a.y)*.18, my = (a.y+b.y)/2 - (b.x-a.x)*.18;
+    ctx.setLineDash(TREE_DASH[e.route] || []); ctx.lineCap = e.route === 'food' ? 'round' : 'butt'; ctx.lineWidth = e.route === 'food' ? 3 : 2;
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.quadraticCurveTo(mx, my, b.x, b.y); ctx.stroke(); ctx.setLineDash([]);
+    var ang = Math.atan2(b.y-my, b.x-mx), ax = b.x - Math.cos(ang)*20, ay = b.y - Math.sin(ang)*20;
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax - Math.cos(ang-0.5)*8, ay - Math.sin(ang-0.5)*8); ctx.lineTo(ax - Math.cos(ang+0.5)*8, ay - Math.sin(ang+0.5)*8); ctx.closePath(); ctx.fill();
+  });
+  ctx.restore();
+};
+Room.prototype.infectious = function(i, t){
+  var st = this.visState(i, t); if (st !== 'P' && st !== 'I') return 0;
+  var pr = this.presence(i, Math.floor(t)); if (pr === 'home') return 0;
+  if (pr === 'leaving' && t - Math.floor(t) > .3) return 0;
+  return st === 'I' ? 1 : .6;
+};
+Room.prototype.drawHaze = function(ctx, t){
+  var d = E.DISEASES[this.res.disease], air = d.routes.air || 0; if (air < .05) return;
+  var strength = air > .5 ? 1 : .35, win = this.flags.window;
+  for (var i=0;i<30;i++){
+    var k = this.infectious(i, t); if (!k) continue;
+    var p = this.pos(i, t); if (!p) continue;
+    var rad = (air > .5 ? 120 : 55) * (win ? .75 : 1), ox = win ? -18 : 0;
+    var g = ctx.createRadialGradient(p.x+ox, p.y, 4, p.x+ox, p.y, rad);
+    var a = 0.22 * strength * k * (win ? .6 : 1);
+    g.addColorStop(0, hexA(C.germ, a)); g.addColorStop(1, hexA(C.germ, 0));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x+ox, p.y, rad, 0, 6.28); ctx.fill();
+  }
+  if (win){
+    ctx.save(); ctx.strokeStyle = hexA(C.accent, .35); ctx.lineWidth = 2;
+    for (var w=0; w<WIN.length; w++) for (var s=0;s<2;s++){
+      var yy = (WIN[w][0]+WIN[w][1])/2 + (s?18:-18), ph = ((t*1.7 + w*.3 + s*.5) % 1);
+      ctx.globalAlpha = Math.sin(ph*Math.PI) * .9;
+      ctx.beginPath(); ctx.moveTo(28 + ph*120, yy); ctx.bezierCurveTo(60+ph*120, yy-10, 100+ph*120, yy+10, 140+ph*120, yy); ctx.stroke();
+    }
+    ctx.restore();
+  }
+};
+function hexA(hex, a){
+  if (!hex || hex[0] !== '#') return 'rgba(210,54,143,'+a+')';
+  var n = parseInt(hex.slice(1), 16); if (hex.length === 4) { var r=(n>>8)&15,g=(n>>4)&15,b=n&15; return 'rgba('+(r*17)+','+(g*17)+','+(b*17)+','+a+')'; }
+  return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';
+}
+Room.prototype.drawEffects = function(ctx, t){
+  var self = this, day = Math.floor(t), f = this.flags;
+  // 물건에 묻은 병균(그날 끝까지)
+  var spots = {};
+  this.ev.forEach(function(e){
+    if (e.day !== day) return;
+    if ((e.route==='contact' || e.route==='food') && t >= e.te + e.dur*.45) spots[e.route==='food'?'counter':(e.from%2?'door':'ball')] = 1;
+  });
+  Object.keys(spots).forEach(function(k){ glow(ctx, k==='counter'? {x:480,y:596} : k==='door'? {x:W-24,y:118} : SPOT.ball, 16, .55); });
+  // 그날 처음 들어온 병균(밖에서)
+  if (this.res.index != null && t < .2){
+    var p0 = this.pos(this.res.index, t) || seat(this.res.index), k0 = ease(t/.18);
+    var gp = mix(SPOT.outside, p0, k0); germDot(ctx, gp.x, gp.y, 7);
+  }
+  this.ev.forEach(function(e){
+    if (t < e.te || t > e.te + e.dur) return;
+    var p = (t - e.te)/e.dur, a = self.pos(e.from, e.te) || seat(e.from), b = self.pos(e.to, t) || seat(e.to);
+    if (e.route === 'droplet'){
+      var n = REDUCED ? 4 : 10;
+      for (var k=0;k<n;k++){
+        var sp = (E.rnd(31, e.to, e.day, k) - .5) * 40, q = ease(p*1.1 - k*.02);
+        var x = lerp(a.x, b.x, q) + sp*(1-q)*.4, y = lerp(a.y+8, b.y, q) + sp*Math.sin(q*Math.PI)*.5;
+        ctx.fillStyle = hexA(C.germ, .85*(1-p*.4)); ctx.beginPath(); ctx.arc(x, y, 2.6, 0, 6.28); ctx.fill();
+      }
+      if (p > .85) ring(ctx, b, (p-.85)/.15);
+    } else if (e.route === 'contact'){
+      var obj = e.from%2 ? {x:W-24,y:118} : SPOT.ball;
+      if (p < .45) { var g1 = mix(a, obj, ease(p/.45)); germDot(ctx, g1.x, g1.y, 6); }
+      else { var g2 = mix(obj, b, ease((p-.45)/.55)); germDot(ctx, g2.x, g2.y, 6); if (p > .9) ring(ctx, b, (p-.9)/.1); }
+    } else if (e.route === 'food'){
+      var pot = {x:480, y:596};
+      if (p < .4) { var g3 = mix(a, pot, ease(p/.4)); germDot(ctx, g3.x, g3.y, 6); }
+      else { var g4 = mix(pot, b, ease((p-.4)/.6)); germDot(ctx, g4.x, g4.y, 6); if (p > .9) ring(ctx, b, (p-.9)/.1); }
+    } else {
+      for (var w=0; w<5; w++){
+        var q2 = ease(p - w*.06), cx = lerp(a.x, b.x, q2) + Math.sin(q2*6 + w)*14, cy = lerp(a.y, b.y, q2) + Math.cos(q2*5 + w)*10;
+        ctx.fillStyle = hexA(C.germ, .35*(1-Math.abs(q2-.5))); ctx.beginPath(); ctx.arc(cx, cy, 9 - w, 0, 6.28); ctx.fill();
+      }
+      if (p > .85) ring(ctx, b, (p-.85)/.15);
+    }
+  });
+};
+function germDot(ctx, x, y, r){ glow(ctx, {x:x,y:y}, r*2.2, .5); ctx.fillStyle = C.germ; ctx.beginPath(); for (var k=0;k<8;k++){ var a=k/8*6.28; ctx.moveTo(x,y); ctx.lineTo(x+Math.cos(a)*(r+3), y+Math.sin(a)*(r+3)); } ctx.strokeStyle = C.germ; ctx.lineWidth = 1.5; ctx.stroke(); ctx.beginPath(); ctx.arc(x, y, r, 0, 6.28); ctx.fill(); }
+function glow(ctx, p, r, a){ var g = ctx.createRadialGradient(p.x,p.y,1,p.x,p.y,r); g.addColorStop(0, hexA(C.germ,a)); g.addColorStop(1, hexA(C.germ,0)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x,p.y,r,0,6.28); ctx.fill(); }
+function ring(ctx, p, k){ ctx.strokeStyle = hexA(C.germ, 1-k); ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(p.x, p.y+2, 18 + k*16, 0, 6.28); ctx.stroke(); }
+
+// 감염으로 이어지지 않는 기침들(경로를 보여 주는 장면), 방패에 막히는 장면
+Room.prototype.drawAmbient = function(ctx, t, now){
+  if (REDUCED) return;
+  var day = Math.floor(t), f = t - day, F = this.flags, dk = this.res.disease, drop = E.DISEASES[dk].routes.droplet || 0;
+  for (var i=0;i<30;i++){
+    var k = this.infectious(i, t); if (!k) continue;
+    var p = this.pos(i, t); if (!p) continue;
+    var times = k === 1 ? 3 : 1;
+    for (var c=0;c<times;c++){
+      var tc = E.rnd(55, i, day, c), dt = f - tc;
+      if (dt < 0 || dt > .07) continue;
+      var q = dt/.07;
+      if (F.cough){ // 팔꿈치로 가림
+        ctx.strokeStyle = LOOK[i].skin; ctx.lineWidth = 6; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(p.x-18, p.y+16); ctx.quadraticCurveTo(p.x-4, p.y+14, p.x+10, p.y+6); ctx.stroke(); ctx.lineCap = 'butt';
+      }
+      var reach = (F.mask ? .35 : 1) * (F.cough ? .35 : 1) * (drop > .2 ? 1 : .6);
+      var dir = E.rnd(56, i, day, c) * 6.28;
+      for (var n=0;n<8;n++){
+        var a = dir + (n-3.5)*.16, dist = (14 + q*60*reach) * (0.7 + .3*E.rnd(57,i,n,c));
+        ctx.fillStyle = hexA(C.germ, .6*(1-q)); ctx.beginPath(); ctx.arc(p.x + Math.cos(a)*dist, p.y + 8 + Math.sin(a)*dist, 2, 0, 6.28); ctx.fill();
+      }
+      if (q < .5){ ctx.fillStyle = C.ink; ctx.font = '13px '+fontHand(); ctx.textAlign = 'center'; ctx.fillText(dk==='noro' ? '우웩' : '콜록', p.x, p.y - 24); }
+    }
+  }
+  // 방패에 튕겨 나가는 병균
+  if (F.vaccine){
+    for (var j=0;j<30;j++){
+      var aj = this.res.agents[j]; if (!aj.vacc) continue;
+      var tb = E.rnd(77, j, day, 0); if (E.rnd(78, j, day, 0) > .25) continue;
+      var db = f - tb; if (db < 0 || db > .05) continue;
+      if (!this.anyInfectious(t)) continue;
+      var pj = this.pos(j, t); if (!pj) continue;
+      ctx.strokeStyle = hexA(C.shield, 1 - db/.05); ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(pj.x, pj.y+2, 24 + db*200, 0, 6.28); ctx.stroke();
+      germDot(ctx, pj.x + 30 + db*500, pj.y - 20 - db*300, 4);
+    }
+  }
+};
+Room.prototype.anyInfectious = function(t){ for (var i=0;i<30;i++) if (this.infectious(i,t)) return true; return false; };
+Room.prototype.drawUV = function(ctx, t, order, now){
+  ctx.save();
+  ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = '#5B4A9E'; ctx.fillRect(0,0,W,H);
+  ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = 'rgba(26,16,58,.35)'; ctx.fillRect(0,0,W,H);
+  var self = this, pulse = REDUCED ? 0 : (Math.sin(now/240)+1)/2;
+  order.forEach(function(o){
+    var st = self.visState(o.i, t);
+    if (st === 'E' || st === 'P'){
+      var p = o.p;
+      var g = ctx.createRadialGradient(p.x, p.y, 6, p.x, p.y, 34); g.addColorStop(0, 'rgba(250,240,90,.55)'); g.addColorStop(1,'rgba(250,240,90,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, 34, 0, 6.28); ctx.fill();
+      ctx.setLineDash([5,4]); ctx.strokeStyle = '#FAF05A'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(p.x, p.y+2, 22 + pulse*2, 0, 6.28); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = '#FAF05A'; ctx.font = '18px '+fontDisp(); ctx.textAlign='center'; ctx.fillText('?', p.x + 20, p.y - 16);
+    }
+  });
+  // 블랙라이트에 드러나는 물건 위 병균
+  var res = this.res, hidden = 0;
+  order.forEach(function(o){ var st = self.visState(o.i, t); if (st === 'E' || st === 'P') hidden++; });
+  if (res && !this.idle){
+    var d = E.DISEASES[res.disease], anyInf = false;
+    for (var i=0;i<30;i++){
+      if (!this.infectious(i, t)) continue; anyInf = true;
+      if ((d.routes.contact||0) > 0){ var sp = seat(i); uvSpot(ctx, sp.x - 14, sp.y - 26, 10); uvSpot(ctx, sp.x + 12, sp.y - 24, 8); }
+    }
+    if (anyInf && (d.routes.contact||0) > 0){ uvSpot(ctx, W-24, 118, 13); uvSpot(ctx, SPOT.ball.x, SPOT.ball.y, 15); }
+    if (anyInf && (d.routes.food||0) > 0 && !(this.flags && this.flags.food)) uvSpot(ctx, 480, 597, 20);
+  }
+  var msg = hidden ? '숨은 감염 '+hidden+'명 · 노란 점선 = 겉으론 멀쩡하지만 몸속에 병균이 있는 친구' : '지금은 숨은 감염 친구가 없어요 · 분홍 빛 = 물건에 묻은 병균';
+  ctx.font = '17px '+fontDisp(); ctx.textAlign = 'center';
+  var mw = ctx.measureText(msg).width + 28;
+  ctx.fillStyle = 'rgba(20,12,48,.85)'; roundRect(ctx, (W-mw)/2, H-60, mw, 34, 17); ctx.fill();
+  ctx.fillStyle = '#FAF05A'; ctx.fillText(msg, W/2, H-37);
+  ctx.restore();
+};
+Room.prototype.drawProtected = function(ctx, now){
+  var self = this, k = clamp((performance.now() - this.protectedAt)/600, 0, 1);
+  this.protectedSet.forEach(function(i){
+    var p = self.pos(i, self.t) || seat(i);
+    var sp = REDUCED ? 0 : now/300 + i;
+    ctx.save(); ctx.globalAlpha = k;
+    for (var s=0;s<4;s++){ var a = sp + s*1.57, x = p.x + Math.cos(a)*28, y = p.y + 2 + Math.sin(a)*28; star(ctx, x, y, 5.5, C.latent); }
+    ctx.restore();
+  });
+};
+function uvSpot(ctx, x, y, r){ var g = ctx.createRadialGradient(x,y,1,x,y,r*2.2); g.addColorStop(0,'rgba(255,90,220,.95)'); g.addColorStop(.45,'rgba(255,90,220,.45)'); g.addColorStop(1,'rgba(255,90,220,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x,y,r*2.2,0,6.28); ctx.fill(); }
+function star(ctx, x, y, r, col){ ctx.fillStyle = col; ctx.beginPath(); for (var k=0;k<10;k++){ var a = k/10*6.28 - Math.PI/2, rr = k%2 ? r*.45 : r; ctx.lineTo(x+Math.cos(a)*rr, y+Math.sin(a)*rr); } ctx.closePath(); ctx.fill(); }
+Room.prototype.hit = function(evt){
+  var r = this.cv.getBoundingClientRect(), x = (evt.clientX - r.left)/r.width*W, y = (evt.clientY - r.top)/r.height*H, best = -1, bd = 1e9;
+  for (var i=0;i<30;i++){ var s = seat(i), dd = (s.x-x)*(s.x-x)+(s.y-y)*(s.y-y); if (dd < bd){ bd = dd; best = i; } }
+  return bd < 40*40 ? best : -1;
+};
+
+/* ---------- 앱 상태 ---------- */
+var S = store.get('state') || {};
+S.progress = S.progress || {}; ORDER.forEach(function(k){ S.progress[k] = S.progress[k] || { done:false, tries:0, best:null }; });
+S.me = (typeof S.me === 'number') ? S.me : null;
+S.nick = S.nick || ''; S.learned = S.learned || ''; S.unlockAll = !!S.unlockAll;
+function save(){ store.set('state', { progress:S.progress, me:S.me, nick:S.nick, learned:S.learned, unlockAll:S.unlockAll }); }
+
+var room = new Room($('#room')), coverRoom = new Room($('#cover-canvas'));
+coverRoom.idle = true; coverRoom.boardIdle = '오늘도 우리 반 30명';
+var L = { dk:null, per:{}, seed:null, base:null, run:null, picked:[], fails:0, observed:null, lastCards:null, lastResult:null, stage:'intro', mode:'none', speed:1, onEnd:null, lastDay:-1, triggers:{}, back:null, keepProtected:null };
+
+function unlocked(dk){
+  if (S.unlockAll) return true;
+  var i = ORDER.indexOf(dk); if (i <= 0) return true;
+  var prev = S.progress[ORDER[i-1]]; return prev.done || prev.tries >= 3;
+}
+function renderTabs(active){
+  var html = ORDER.map(function(k){
+    var P = S.progress[k], dis = !unlocked(k);
+    return '<button class="tab" type="button" data-dk="'+k+'"'+(dis?' disabled':'')+(active===k?' aria-current="step"':'')+' data-done="'+(P.done?1:0)+'"><span class="num">'+(P.done?'✓':INFO[k].n)+'</span>'+INFO[k].title+'</button>';
+  }).join('');
+  var allDone = ORDER.every(function(k){ return S.progress[k].done || S.progress[k].tries >= 3; });
+  html += '<button class="tab" type="button" data-dk="final"'+((allDone||S.unlockAll)?'':' disabled')+(active==='final'?' aria-current="step"':'')+'><span class="num">★</span>탐구 카드</button>';
+  $('#tabs').innerHTML = html;
+}
+$('#tabs').addEventListener('click', function(e){
+  var b = e.target.closest('.tab'); if (!b || b.disabled) return;
+  if (b.dataset.dk === 'final') showFinal(); else openDisease(b.dataset.dk);
+});
+
+/* ---------- 표지 ---------- */
+$('#exp-list').innerHTML = ORDER.map(function(k){
+  var I = INFO[k], r = I.routes[0][0];
+  return '<li class="sheet"><span class="k">실험 '+I.n+'</span><span class="t">'+I.title+'</span><span class="r">'+svg(r)+ROUTE_NAME[r]+'</span></li>';
+}).join('');
+$('#nick').value = S.nick;
+$('#btn-start').addEventListener('click', function(){
+  S.nick = $('#nick').value.trim(); save();
+  var next = ORDER.filter(function(k){ return unlocked(k) && !S.progress[k].done; })[0] || 'flu';
+  openDisease(next);
+});
+
+function show(id){ ['cover','lab','final'].forEach(function(s){ $('#'+s).hidden = (s !== id); }); window.scrollTo({top:0}); }
+
+/* ---------- 실험 ---------- */
+var FRESH = function(){ return { seed:null, base:null, run:null, picked:[], fails:0, observed:null, lastCards:null, lastResult:null, stage:'intro' }; };
+var PER_KEYS = ['seed','base','run','picked','fails','observed','lastCards','lastResult','stage'];
+function stash(){ if (!L.dk) return; var o = {}; PER_KEYS.forEach(function(k){ o[k] = L[k]; }); L.per[L.dk] = o; }
+function restore(dk){ var o = L.per[dk] || FRESH(); PER_KEYS.forEach(function(k){ L[k] = o[k]; }); }
+
+function setMission(eyebrow, title, text, stepIdx, back){
+  $('#m-eyebrow').textContent = eyebrow; $('#m-title').textContent = title; $('#m-text').textContent = text;
+  $('#steps').innerHTML = STEP_NAMES.map(function(n, i){ return '<li data-s="'+(i<stepIdx?'done':i===stepIdx?'now':'later')+'">'+n+'</li>'; }).join('');
+  L.back = back || null; $('#m-back').hidden = !back;
+}
+$('#m-back').addEventListener('click', function(){ if (L.back){ stopPlay(); L.back(); } });
+function goCover(){ stopPlay(); show('cover'); renderTabs(null); }
+function prevOf(dk){ var i = ORDER.indexOf(dk); return i > 0 ? ORDER[i-1] : null; }
+
+function openDisease(dk){
+  if (L.dk !== dk){ stash(); restore(dk); }
+  L.dk = dk; stopPlay();
+  show('lab'); renderTabs(dk);
+  var mm = $('#memo'); mm.textContent = '실험을 시작하면 이곳에 관찰 메모가 나타나요.'; mm.dataset.show = '0';
+  room.boardTitle = INFO[dk].title + ' 실험'; room.uv = false; room.protectedSet = null;
+  if (S.me === null) return seatStep();
+  resume();
+}
+function resume(){
+  if (L.stage === 'observe' && L.base) return observeStep();
+  if ((L.stage === 'pick' || L.stage === 'run') && L.base) return pickStep();
+  if (L.stage === 'result' && L.lastResult) return resultView();
+  if (L.stage === 'base' && L.base) return baseStep(false);
+  introStep();
+}
+function idleStage(){ stopPlay(); room.setResult(null); room.idle = true; room.t = 0; setCtlEnabled(false); renderBeds(0); }
+// 무대에 결과를 올리고 마지막 날 모습으로 멈춤
+function ensureStage(res){
+  if (room.res !== res || room.idle){ room.setResult(res); room.idle = false; }
+  room.t = res.days - 0.001; L.mode = 'ended'; L.onEnd = null;
+  setCtlEnabled(true); syncCtl(); updateHUD(true);
+}
+
+function seatStep(){
+  setMission('준비', '내 자리 정하기', '교실에서 내가 앉을 자리를 하나 눌러 보세요. 실험 내내 "나"로 표시돼요.', 0, goCover);
+  $('#panel').innerHTML = '<p class="hand" style="margin:0">교실 그림에서 친구 한 명을 누르면 그 자리가 내 자리가 돼요.</p><p class="fine">자리는 나중에 바꿀 수 없어요. 마음에 드는 곳을 골라 보세요!</p>';
+  idleStage(); room.pickMode = true;
+}
+$('#room').addEventListener('pointermove', function(e){ if (room.pickMode) room.hover = room.hit(e); });
+$('#room').addEventListener('click', function(e){
+  if (!room.pickMode) return;
+  var i = room.hit(e); if (i < 0) return;
+  S.me = i; room.me = i; room.pickMode = false; save(); introStep();
+});
+
+function introStep(){
+  var dk = L.dk, I = INFO[dk], prev = prevOf(dk);
+  L.stage = 'intro';
+  setMission('실험 '+I.n, I.full+' 알아보기', '먼저 '+I.title+'이(가) 어떤 병인지 알아봐요. 그다음 우리 반에 퍼뜨려 볼 거예요.', 0,
+    prev ? function(){ openDisease(prev); } : goCover);
+  var chips = I.routes.map(function(r){ return '<span class="chip">'+svg(r[0])+ROUTE_NAME[r[0]]+' <b>'+r[1]+'</b></span>'; }).join('');
+  $('#panel').innerHTML =
+    '<dl class="facts">'+
+    '<div class="fact"><dt>퍼지는 길</dt><dd><div class="chips">'+chips+'</div></dd></div>'+
+    '<div class="fact"><dt>몸에 들어와 아프기까지</dt><dd>'+I.inc+'</dd></div>'+
+    '<div class="fact"><dt>이런 증상</dt><dd>'+I.sym+'</dd></div>'+
+    '<div class="fact"><dt>알아 둘 점</dt><dd>'+I.tip+'</dd></div>'+
+    '</dl>'+
+    '<p class="hand" style="margin:0">보건실 침대는 3개! 아픈 친구가 동시에 3명을 넘으면 보건실이 넘쳐요.</p>'+
+    '<div class="row-btns"><button class="btn" id="go-base" type="button" disabled>'+svg('play')+'아무것도 안 하면? 실험 시작</button>'+
+    (L.base ? '<button class="btn secondary" id="go-base-view" type="button">지난 실험 결과 보기</button>' : '')+'</div>';
+  idleStage();
+  var vb = $('#go-base-view'); if (vb) vb.addEventListener('click', function(){ baseStep(false); });
+  // 반 고르기는 잠깐 걸려서, 읽는 동안 미리 계산
+  setTimeout(function(){
+    if (L.dk !== dk) return;
+    if (L.seed === null){ L.seed = E.pickSeed(dk, (Date.now() & 0xffff) * 131 + ORDER.indexOf(dk), S.me).seed; }
+    if (!L.base) L.base = E.simulate(dk, [], L.seed);
+    var b = $('#go-base'); if (b){ b.disabled = false; b.addEventListener('click', function(){ baseStep(true); }); }
+  }, 30);
+}
+
+function runPanelHTML(withGhost){
+  return '<div class="counts" id="counts"></div>'+
+    '<div class="sheet chart-box"><div class="chart-cap"><span><i></i>아픈 친구 수</span>'+(withGhost?'<span><i class="g"></i>아무것도 안 했을 때</span>':'')+'<span><i class="b"></i>보건실 침대 3개</span></div><svg id="chart" viewBox="0 0 360 170" role="img" aria-label="날마다 아픈 친구 수 그래프"></svg></div>'+
+    '<div id="run-extra"></div>';
+}
+function baseStep(fromStart){
+  var dk = L.dk, I = INFO[dk];
+  L.stage = 'base';
+  setMission('실험 '+I.n, '아무것도 안 하면?', '예방 수칙을 하나도 안 지키면 어떻게 될까요? 교실을 잘 지켜보세요. 분홍색 점이 병균이에요.', 1, introStep);
+  $('#panel').innerHTML = runPanelHTML(false);
+  room.setResult(L.base); room.idle = false; room.pickMode = false; room.tree = true; room.protectedSet = null;
+  if (fromStart){ room.t = 0; room.uv = false; L.speed = 1; play(baseDone); toStage(); }
+  else { ensureStage(L.base); baseDone(); }
+}
+function baseDone(){
+  var dk = L.dk, b = L.base, I = INFO[dk];
+  var meSick = b.agents[S.me].t !== null;
+  var ex = $('#run-extra'); if (!ex) return;
+  ex.innerHTML =
+    '<div class="result-head"><div class="big">처음 1명이 → 모두 <span style="color:var(--sick)">'+b.total+'명</span>이 아팠어요.<br>가장 많을 땐 동시에 '+b.peak+'명! 보건실 침대 3개로는 모자라요.</div></div>'+
+    '<p class="real" style="margin:0">'+(meSick ? '나도 '+I.title+'에 걸렸어요.' : '나는 운 좋게 안 걸렸어요.')+' 분홍 화살표를 따라가면 누가 누구에게 옮겼는지 보여요. 교실 아래 <b>다시 보기</b>를 누르거나 막대를 끌면 처음부터 다시 볼 수 있어요.</p>'+
+    '<div class="row-btns"><button class="btn" id="go-obs" type="button">관찰 질문 풀기'+svg('arrow')+'</button></div>';
+  $('#go-obs').addEventListener('click', observeStep);
+  memo(meSick ? '나도 아팠어요… 어떻게 막을 수 있을까?' : '반 친구 대부분이 아팠어요!');
+}
+function routeCounts(res){
+  var c = { droplet:0, contact:0, air:0, food:0 };
+  res.events.forEach(function(e){ c[e.route]++; }); return c;
+}
+function observeStep(){
+  var dk = L.dk, I = INFO[dk];
+  var routes = ['droplet','contact','air','food'], answer = I.routes[0][0];
+  L.stage = 'observe';
+  setMission('실험 '+I.n, '관찰 질문', '앞에서 '+I.title+'은(는) 무엇으로 가장 많이 퍼진다고 했나요?', 2, function(){ baseStep(false); });
+  $('#panel').innerHTML = '<div class="question"><p class="real" style="margin:0">기억이 안 나면 <button class="linkbtn" id="to-intro" type="button">알아보기 다시 보기</button>를 눌러 확인하고 돌아와도 돼요.</p><div class="opts" id="opts">'+
+    routes.map(function(r){ return '<button class="opt" type="button" data-r0="'+r+'">'+svg(r)+ROUTE_NAME[r]+'</button>'; }).join('')+
+    '</div><div id="obs-out"></div></div>';
+  $('#to-intro').addEventListener('click', introStep);
+  ensureStage(L.base);
+  function reveal(){
+    var counts = routeCounts(L.base), ok = L.observed === answer;
+    [].forEach.call(document.querySelectorAll('.opt'), function(b){ b.disabled = true; if (b.dataset.r0 === answer) b.dataset.r = 'right'; else if (b.dataset.r0 === L.observed) b.dataset.r = 'wrong'; });
+    var max = Math.max.apply(null, routes.map(function(r){ return counts[r]; })) || 1;
+    $('#obs-out').innerHTML =
+      '<p class="hand" style="margin:0">'+(ok ? '정답! '+I.title+'은(는) '+ROUTE_NAME[answer]+'(으)로 가장 많이 퍼져요.' : '아쉬워요. '+I.title+'은(는) '+ROUTE_NAME[answer]+'(으)로 가장 많이 퍼져요.')+'</p>'+
+      '<p class="real" style="margin:0">방금 실험에서 컴퓨터가 센 전파 횟수예요. 교실의 화살표 모양으로도 구별할 수 있어요.</p>'+
+      '<ul class="route-bars">'+routes.map(function(r){ return '<li><span>'+ROUTE_NAME[r]+'</span><span class="bar"><span style="width:'+(counts[r]/max*100)+'%"></span></span><span class="n">'+counts[r]+'번</span></li>'; }).join('')+'</ul>'+
+      '<p class="real" style="margin:0">이 길을 막는 카드가 무엇일지 생각해 보세요.</p>'+
+      '<div class="row-btns"><button class="btn" id="go-pick" type="button">예방 카드 고르기'+svg('arrow')+'</button></div>';
+    $('#go-pick').addEventListener('click', pickStep);
+  }
+  $('#opts').addEventListener('click', function(e){
+    var o = e.target.closest('.opt'); if (!o || L.observed) return;
+    L.observed = o.dataset.r0; reveal();
+  });
+  if (L.observed) reveal();
+}
+function pickStep(){
+  var dk = L.dk, I = INFO[dk];
+  L.stage = 'pick';
+  setMission('실험 '+I.n, '예방 카드 3장 고르기', '카드 8장 중 3장만 고를 수 있어요. 아픈 친구가 동시에 3명(보건실 침대 수)을 넘지 않게 막아 보세요.', 3, observeStep);
+  var hintHTML = L.fails > 0 ? '<p class="hint"><b>힌트</b> '+currentHint()+'</p>' : '';
+  $('#panel').innerHTML = hintHTML + '<div class="cards" id="cards">'+E.CARD_ORDER.map(function(c){
+    return '<button class="pcard" type="button" data-c="'+c+'" aria-pressed="'+(L.picked.indexOf(c)>=0)+'"><span class="ic">'+svg(c)+'</span><span class="nm">'+E.CARDS[c].name+'</span><span class="ds">'+CARD_TEXT[c]+'</span></button>';
+  }).join('')+'</div><div class="pick-foot"><div class="slots" id="slots"></div><button class="btn" id="go-run" type="button">'+svg('play')+'이 3장으로 실험하기</button></div>';
+  $('#cards').addEventListener('click', function(e){
+    var b = e.target.closest('.pcard'); if (!b) return;
+    var c = b.dataset.c, i = L.picked.indexOf(c);
+    if (i >= 0) L.picked.splice(i, 1); else if (L.picked.length < 3) L.picked.push(c);
+    syncPick();
+  });
+  $('#go-run').addEventListener('click', runStep);
+  syncPick();
+  room.protectedSet = null; ensureStage(L.base);
+}
+function currentHint(){
+  var I = INFO[L.dk];
+  if (L.dk === 'noro' && L.lastCards && L.lastCards.indexOf('sanitizer')>=0 && L.lastCards.indexOf('soap')<0) return I.hints[1];
+  if (L.dk === 'measles' && L.lastCards && L.lastCards.indexOf('vaccine')<0 && L.fails >= 2) return I.hints[1];
+  return I.hints[Math.min(Math.max(L.fails,1), 3) - 1];
+}
+function syncPick(){
+  [].forEach.call(document.querySelectorAll('.pcard'), function(b){
+    var i = L.picked.indexOf(b.dataset.c);
+    b.setAttribute('aria-pressed', i>=0); if (i>=0) b.dataset.order = i+1; else delete b.dataset.order;
+    b.disabled = i < 0 && L.picked.length >= 3;
+  });
+  $('#slots').innerHTML = [0,1,2].map(function(k){ var c = L.picked[k]; return '<span class="slot" data-f="'+(c?1:0)+'">'+(c?svg(c):'')+'</span>'; }).join('');
+  $('#go-run').disabled = L.picked.length !== 3;
+}
+function cardsStrip(cards){
+  return '<div class="pick-foot"><div class="slots">'+cards.map(function(c){ return '<span class="slot" data-f="1" title="'+E.CARDS[c].name+'">'+svg(c)+'</span>'; }).join('')+'</div><span class="hand">'+cards.map(function(c){ return E.CARDS[c].name; }).join(' + ')+'</span></div>';
+}
+function runStep(){
+  var dk = L.dk, I = INFO[dk];
+  var cards = L.picked.slice(); L.lastCards = cards;
+  L.run = E.simulate(dk, cards, L.seed);
+  L.stage = 'run';
+  setMission('실험 '+I.n, '내 카드로 다시 실험!', '같은 반, 같은 날에 카드 3장만 바꿨어요. 아래 그래프의 회색 점선이 아무것도 안 했을 때예요.', 4, pickStep);
+  $('#panel').innerHTML = cardsStrip(cards) + runPanelHTML(true);
+  room.setResult(L.run); room.idle = false; room.t = 0; room.uv = false; room.protectedSet = null;
+  L.speed = 2; play(function(){ computeResult(); resultView(); }); toStage();
+}
+function computeResult(){
+  var dk = L.dk, r = L.run, b = L.base, P = S.progress[dk];
+  var ok = r.peak <= E.BEDS, saved = [], shieldSaved = 0;
+  for (var i=0;i<30;i++){ if (b.agents[i].t !== null && r.agents[i].t === null){ saved.push(i); if (!r.agents[i].vacc && dk==='measles') shieldSaved++; } }
+  var stars = ok ? (r.total <= 3 ? 3 : 2) : (r.peak <= b.peak*0.6 ? 1 : 0);
+  P.tries++;
+  if (!ok) L.fails++;
+  var entry = { cards:r.cards, stars:stars, saved:saved.length, total:r.total, peak:r.peak, ok:ok, meSick: r.agents[S.me].t !== null };
+  if (!P.best || stars > P.best.stars || (stars === P.best.stars && saved.length > P.best.saved)) P.best = entry;
+  if (ok) P.done = true;
+  save(); renderTabs(dk);
+  L.lastResult = { ok:ok, stars:stars, savedIdx:saved, shieldSaved:shieldSaved, meSick:entry.meSick, tries:P.tries };
+}
+function resultView(){
+  var dk = L.dk, I = INFO[dk], r = L.run, b = L.base, P = S.progress[dk], R = L.lastResult, ok = R.ok, stars = R.stars, saved = R.savedIdx;
+  L.stage = 'result';
+  setMission('실험 '+I.n, ok ? '성공! 우리 반을 지켰어요' : '아깝다! 다시 도전해 봐요', '교실 아래 다시 보기를 누르면 내 카드로 한 실험을 처음부터 다시 볼 수 있어요.', 4, pickStep);
+  ensureStage(L.run);
+  room.protectedSet = saved; room.protectedAt = performance.now();
+  var R0 = E.reff(dk, []), Rn = E.reff(dk, r.cards), gmax = Math.max(R0, 3);
+  var starHTML = '<div class="stars" aria-label="별 '+stars+'개">'+[0,1,2].map(function(k){ return k<stars ? svgFilled('star','var(--latent)') : svgFilled('star','var(--rule)'); }).join('')+'</div>';
+  var fx = r.cards.map(function(c){ var w = cardWhy(dk, c); return '<li><span class="ic">'+svg(c)+'</span><span><b style="font-weight:400;font-family:var(--font-display)">'+E.CARDS[c].name+'</b><span class="why">'+w.why+'</span></span><span class="tag '+w.tier+'">'+w.label+'</span></li>'; }).join('');
+  var nextDk = ORDER.indexOf(dk) === 2 ? null : ORDER[ORDER.indexOf(dk)+1];
+  var html = cardsStrip(r.cards)+
+    '<div class="result-head"><div class="stampmark'+(ok?'':' fail')+'">'+(ok?'성공!':'다시<br>도전')+'</div><div class="txt">'+starHTML+'<div class="big">'+(ok ? '보건실이 넘치지 않았어요!' : '동시에 '+r.peak+'명이 아파서 보건실이 넘쳤어요.')+'</div><span class="real">모두 '+r.total+'명 아팠어요 (아무것도 안 했을 땐 '+b.total+'명).</span></div></div>'+
+    '<div class="saved"><span class="n">'+saved.length+'명</span><span>내 카드로 <b style="font-weight:400;font-family:var(--font-display)">지킨 친구</b>예요. 교실에서 별이 반짝이는 친구들이에요.'+(R.meSick?'':' 나도 무사했어요!')+'</span></div>'+
+    (dk==='measles' && r.cards.indexOf('vaccine')>=0 && R.shieldSaved ? '<p class="learn" style="margin:0"><b style="font-weight:400;font-family:var(--font-display)">함께 지키는 방패</b> 예방접종을 못 한 친구 '+R.shieldSaved+'명도 안 걸렸어요. 주변 친구들이 방패가 되어 주었기 때문이에요.</p>' : '');
+  if (!ok){
+    html += '<p class="hint"><b>힌트</b> '+currentHint()+'</p><div class="row-btns"><button class="btn" id="go-retry" type="button">카드 다시 고르기</button>'+
+      (P.tries>=3 && !P.done ? (nextDk ? '<button class="btn secondary" id="go-next" type="button">다음 실험으로</button>' : '<button class="btn secondary" id="go-final" type="button">탐구 카드 만들기</button>') : '')+'</div>';
+  } else {
+    html += '<div class="learn"><h3>'+I.title+', 이렇게 막을 수 있어요</h3><ul>'+I.learn.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul></div>'+
+      '<p class="real"><b>진짜 세상에서는</b> '+I.real+'</p>'+
+      '<div class="row-btns">'+(nextDk ? '<button class="btn" id="go-next" type="button">다음 실험: '+INFO[nextDk].title+svg('arrow')+'</button>' : '<button class="btn" id="go-final" type="button">내 탐구 카드 만들기'+svg('arrow')+'</button>')+'<button class="btn secondary" id="go-retry" type="button">다른 조합도 해 보기</button></div>';
+  }
+  html += '<div class="details"><span class="label">카드마다 얼마나 통했을까?</span><ul class="cardfx">'+fx+'</ul>'+
+    '<div class="gauge"><span class="label">퍼지는 힘: 아픈 친구 1명이 평균 몇 명에게 옮길까?</span>'+
+      '<div class="row"><span>그냥 두면</span><span class="track"><span class="fill" style="width:'+(clamp(R0/gmax,0,1)*100)+'%;background:var(--ink-soft);opacity:.45"></span><span class="one" style="left:'+(1/gmax*100)+'%"></span></span><span class="v">'+fmtR(R0)+'명</span></div>'+
+      '<div class="row"><span>내 카드</span><span class="track"><span class="fill" style="width:'+(clamp(Rn/gmax,0,1)*100)+'%;background:'+(Rn<1?'var(--recovered)':'var(--sick)')+'"></span><span class="one" style="left:'+(1/gmax*100)+'%"></span></span><span class="v">'+fmtR(Rn)+'명</span></div>'+
+      '<span class="cap">빨간 점선(1명)보다 낮으면 병이 점점 줄어들어요. 운에 따라 결과가 조금씩 달라질 수 있어요.</span></div>'+
+    '<div class="sheet chart-box"><div class="chart-cap"><span><i></i>아픈 친구 수</span><span><i class="g"></i>아무것도 안 했을 때</span><span><i class="b"></i>보건실 침대 3개</span></div><svg id="chart" viewBox="0 0 360 170" role="img" aria-label="날마다 아픈 친구 수 그래프"></svg></div></div>';
+  $('#panel').innerHTML = html;
+  drawChart(r.days);
+  var rb = $('#go-retry'); if (rb) rb.addEventListener('click', pickStep);
+  var nb = $('#go-next'); if (nb) nb.addEventListener('click', function(){ openDisease(nextDk); });
+  var fb = $('#go-final'); if (fb) fb.addEventListener('click', showFinal);
+  memo(ok ? '별이 반짝이는 친구들은 내 카드 덕분에 안 아팠어요!' : '아깝다! 힌트를 보고 다시 골라 봐요.');
+}
+function toStage(){ if (window.innerWidth <= 980) { var st = $('.stage'); if (st && st.scrollIntoView) st.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' }); } }
+function fmtR(v){ return v >= 10 ? Math.round(v)+'' : v.toFixed(1); }
+
+/* ---------- 재생 ---------- */
+// L.mode: none(무대 없음) · playing · paused · ended
+var raf = 0, lastNow = 0;
+function play(onEnd){ L.onEnd = onEnd || null; L.mode = 'playing'; L.triggers = {}; L.lastDay = -1; setCtlEnabled(true); syncCtl(); }
+function stopPlay(){ L.mode = 'none'; L.onEnd = null; L.keepProtected = null; syncCtl(); }
+function finish(){
+  if (!room.res) return;
+  L.mode = 'ended'; room.t = room.res.days - 0.001;
+  if (L.keepProtected){ room.protectedSet = L.keepProtected; room.protectedAt = performance.now(); L.keepProtected = null; }
+  syncCtl(); updateHUD(true);
+  var f = L.onEnd; L.onEnd = null; if (f) f();
+}
+function replay(){
+  if (!room.res) return;
+  if (room.protectedSet){ L.keepProtected = room.protectedSet; room.protectedSet = null; }
+  room.t = 0; L.mode = 'playing'; L.triggers = {}; L.lastDay = -1; syncCtl(); updateHUD(true); toStage();
+}
+function dayMs(){
+  var a = room.active, d = Math.floor(room.t), quiet = a && !a[d] && !(room.uv);
+  return (quiet ? 600 : 1250) / L.speed;
+}
+function loop(now){
+  var dt = lastNow ? Math.min(100, now - lastNow) : 16; lastNow = now;
+  if (!$('#lab').hidden){
+    if (L.mode === 'playing' && room.res && !room.idle){
+      room.t += dt / dayMs();
+      if (room.t >= room.res.days){ room.t = room.res.days - 0.001; finish(); }
+      else { updateHUD(false); triggers(); }
+      syncSeek();
+    } else if (room.idle){ room.t = (room.t + dt/4000) % 1000; }
+    room.draw(now);
+  }
+  if (!$('#cover').hidden){ coverRoom.t = (coverRoom.t + dt/4200); coverRoom.draw(now); }
+  raf = requestAnimationFrame(loop);
+}
+function memo(text){ var m = $('#memo'); m.textContent = text; m.dataset.show = '1'; m.classList.remove('pop'); void m.offsetWidth; m.classList.add('pop'); }
+function triggers(){
+  var t = room.t, res = room.res, T = L.triggers, dk = L.dk, isBase = res === L.base;
+  if (!T.start){ T.start = 1; memo(isBase ? '병균이 반 밖에서 들어왔어요. 누구의 잘못도 아니에요.' : '이번엔 '+res.cards.map(function(c){ return E.CARDS[c].name; }).join(', ')+'!'); }
+  if (isBase){
+    var first = room.ev[0];
+    if (first && !T.first && t > first.te + first.dur){ T.first = 1; memo({ droplet:'기침 한 번에 침방울이 옆 친구에게 날아갔어요!', contact:'손에 묻은 병균이 물건을 거쳐 다른 친구 손으로!', food:'배식대 음식에 묻은 병균이 친구 입으로!', air:'공기 속을 떠다니던 병균이 들어갔어요!' }[first.route]); }
+    var hidden = 0; for (var i=0;i<30;i++){ var s = room.visState(i, t); if (s==='E'||s==='P') hidden++; }
+    if (!T.lens && hidden >= 3 && !room.uv && t > 1.2){ T.lens = 1; memo('겉으로는 다 건강해 보이죠? 돋보기를 눌러 보세요!'); $('#c-lens').classList.add('nudge'); }
+    var sick = res.series[Math.floor(t)];
+    if (!T.full && sick > E.BEDS){ T.full = 1; memo('보건실 침대가 꽉 찼어요! 아픈 친구가 '+sick+'명이에요.'); }
+    if (dk==='measles' && !T.measles && t > 6 && hidden >= 8){ T.measles = 1; memo('홍역은 몸속에 숨어 있는 시간이 길어요. 아직 아무도 아파 보이지 않지만…'); }
+  } else {
+    if (room.flags.vaccine && !T.shield && t > 2){ T.shield = 1; memo('방패를 두른 친구에게 온 병균은 튕겨 나가요!'); }
+    if (room.flags.home && !T.home){ for (var j=0;j<30;j++){ if (room.presence(j, Math.floor(t)) === 'leaving' && t-Math.floor(t) > .3){ T.home = 1; memo('아픈 친구가 집으로 돌아가 쉬어요. 빨리 나으렴!'); break; } } }
+  }
+}
+function hiddenCount(t){ var n = 0; for (var i=0;i<30;i++){ var s = room.visState(i, t); if (s==='E'||s==='P') n++; } return n; }
+function updateHUD(force){
+  var res = room.res; if (!res || room.idle) return;
+  var t = room.t, day = Math.min(Math.floor(t), res.days);
+  $('#daybox').textContent = (day+1) + ' / ' + res.days + '일';
+  var nowT = performance.now();
+  if (!force && day === L.lastDay && nowT - (L.hudAt||0) < 150) { drawChart(t); return; }
+  L.lastDay = day; L.hudAt = nowT;
+  var c = { sick:0, hidden:0, rec:0, healthy:0 };
+  for (var i=0;i<30;i++){ var s = room.visState(i, t); if (s==='I') c.sick++; else if (s==='E'||s==='P') c.hidden++; else if (s==='R') c.rec++; else c.healthy++; }
+  var el = $('#counts');
+  if (el) el.innerHTML =
+    '<div class="count"><span class="v">'+(c.healthy + (room.uv?0:c.hidden))+'</span><span class="k">건강해 보여요</span></div>'+
+    '<div class="count hidden"><span class="v">'+(room.uv?c.hidden:'?')+'</span><span class="k">숨은 감염'+(room.uv?'':' (돋보기)')+'</span></div>'+
+    '<div class="count sick"><span class="v">'+c.sick+'</span><span class="k">아파요</span></div>'+
+    '<div class="count rec"><span class="v">'+c.rec+'</span><span class="k">나았어요</span></div>';
+  renderBeds(res.series[day] || 0);
+  drawChart(t);
+  syncSeek();
+}
+function renderBeds(n){
+  var html = '<span class="title">'+svg('bed')+'보건실</span><span class="bed-row">';
+  for (var k=0;k<E.BEDS;k++) html += '<span class="bed" data-on="'+(k<n?1:0)+'" aria-hidden="true"></span>';
+  html += '</span>';
+  if (n > E.BEDS){ html += '<span class="overflow">자리 없음 +'+(n-E.BEDS)+'명'; for (var j=0;j<Math.min(n-E.BEDS, 12);j++) html += '<i class="dot"></i>'; html += '</span>'; }
+  html += '<span class="bed-note">지금 아픈 친구 '+n+'명</span>';
+  var b = $('#beds'); if (b.dataset.n !== String(n)){ b.innerHTML = html; b.dataset.n = String(n); }
+}
+function drawChart(t){
+  var svgEl = $('#chart'); if (!svgEl || !room.res) return;
+  var res = room.res, D = res.days, ghost = (res !== L.base && L.base) ? L.base.series : null;
+  var ymax = Math.max(12, Math.ceil(Math.max.apply(null, (ghost||res.series).concat(res.series))/4)*4);
+  var x0 = 30, x1 = 350, y0 = 150, y1 = 10;
+  var X = function(d){ return x0 + d/D*(x1-x0); }, Y = function(v){ return y0 - v/ymax*(y0-y1); };
+  var h = '';
+  for (var g=0; g<=ymax; g+=ymax/4){ h += '<line x1="'+x0+'" x2="'+x1+'" y1="'+Y(g)+'" y2="'+Y(g)+'" stroke="var(--rule)" stroke-width="1"/><text x="'+(x0-6)+'" y="'+(Y(g)+4)+'" text-anchor="end" font-size="10" fill="var(--ink-soft)">'+g+'</text>'; }
+  var step = D > 12 ? 5 : 2;
+  for (var d=0; d<=D; d+=step){ h += '<text x="'+X(d)+'" y="'+(y0+14)+'" text-anchor="middle" font-size="10" fill="var(--ink-soft)">'+(d===0?'1일':d+'일')+'</text>'; }
+  h += '<line x1="'+x0+'" x2="'+x1+'" y1="'+Y(E.BEDS)+'" y2="'+Y(E.BEDS)+'" stroke="var(--stamp)" stroke-width="1.5" stroke-dasharray="5 4"/>';
+  h += '<text x="'+(x1)+'" y="'+(Y(E.BEDS)-5)+'" text-anchor="end" font-size="10" fill="var(--stamp)">보건실 침대 3개</text>';
+  if (ghost){
+    h += '<polyline fill="none" stroke="var(--ink-soft)" stroke-width="2.4" stroke-dasharray="6 4" stroke-linejoin="round" points="'+ghost.map(function(v,i){ return X(i)+','+Y(v); }).join(' ')+'"/>';
+    var gp = 0; ghost.forEach(function(v,i){ if (v > ghost[gp]) gp = i; });
+    var gx = clamp(X(gp), x0+60, x1-60);
+    h += '<text x="'+gx+'" y="'+(Y(ghost[gp])-7)+'" text-anchor="middle" font-size="10" fill="var(--ink-soft)">아무것도 안 했을 때</text>';
+  }
+  var upto = Math.min(t, D), pts = [];
+  for (var i=0; i<=Math.floor(upto); i++) pts.push([X(i), Y(res.series[i])]);
+  var fl = Math.floor(upto); if (fl < D) pts.push([X(upto), Y(lerp(res.series[fl], res.series[Math.min(fl+1,D)], upto-fl))]);
+  if (pts.length){
+    var line = pts.map(function(p){ return p[0].toFixed(1)+','+p[1].toFixed(1); }).join(' ');
+    h += '<polygon fill="var(--sick)" fill-opacity=".14" points="'+X(0)+','+y0+' '+line+' '+pts[pts.length-1][0].toFixed(1)+','+y0+'"/>';
+    h += '<polyline fill="none" stroke="var(--sick)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="'+line+'"/>';
+    var lp = pts[pts.length-1]; h += '<circle cx="'+lp[0].toFixed(1)+'" cy="'+lp[1].toFixed(1)+'" r="4.5" fill="var(--sick)" stroke="var(--sheet)" stroke-width="2"/>';
+  }
+  h += '<text x="'+x0+'" y="'+(y1-1)+'" font-size="10" fill="var(--ink-soft)">명</text>';
+  svgEl.innerHTML = h;
+}
+
+/* ---------- 조작 ---------- */
+function syncCtl(){
+  var m = L.mode;
+  $('#c-play').innerHTML = m === 'playing' ? svg('pause')+'멈춤' : m === 'ended' ? svg('replay')+'다시 보기' : svg('play')+(m === 'paused' ? '계속 보기' : '재생');
+  $('#c-play').setAttribute('aria-label', m === 'playing' ? '일시정지' : m === 'ended' ? '처음부터 다시 보기' : '재생');
+  $('#c-speed').textContent = '빠르기 '+L.speed+'배';
+  $('#c-skip').disabled = !(m === 'playing' || m === 'paused');
+  $('#c-lens').innerHTML = svg('lens')+'돋보기';
+  $('#c-lens').setAttribute('aria-pressed', room.uv);
+  $('#c-tree').innerHTML = svg('tree')+'감염 길';
+  $('#c-tree').setAttribute('aria-pressed', room.tree);
+}
+function setCtlEnabled(on){
+  ['#c-play','#c-speed','#c-lens','#c-tree','#c-seek'].forEach(function(s){ $(s).disabled = !on; });
+  if (!on){ $('#daybox').textContent = ''; $('#c-skip').disabled = true; }
+  else syncCtl();
+  syncSeek();
+}
+function syncSeek(){
+  var s = $('#c-seek');
+  if (!room.res || room.idle){ s.value = 0; return; }
+  s.max = String(room.res.days); if (document.activeElement !== s || L.mode === 'playing') s.value = String(room.t);
+}
+$('#c-play').addEventListener('click', function(){
+  if (!room.res || room.idle) return;
+  if (L.mode === 'playing') L.mode = 'paused';
+  else if (L.mode === 'paused') L.mode = 'playing';
+  else replay();
+  syncCtl();
+});
+$('#c-speed').addEventListener('click', function(){ L.speed = L.speed === 1 ? 2 : L.speed === 2 ? 4 : 1; syncCtl(); });
+$('#c-skip').addEventListener('click', function(){ if (L.mode === 'playing' || L.mode === 'paused') finish(); });
+$('#c-seek').addEventListener('input', function(){
+  if (!room.res || room.idle) return;
+  var v = clamp(parseFloat(this.value) || 0, 0, room.res.days - 0.001);
+  if (L.keepProtected == null && room.protectedSet && v < room.res.days - 0.01){ L.keepProtected = room.protectedSet; room.protectedSet = null; }
+  room.t = v;
+  if (L.mode === 'playing' || L.mode === 'ended') L.mode = 'paused';
+  if (v >= room.res.days - 0.01 && L.keepProtected){ room.protectedSet = L.keepProtected; L.keepProtected = null; }
+  syncCtl(); updateHUD(true);
+});
+$('#c-lens').addEventListener('click', function(){
+  room.uv = !room.uv; $('#c-lens').classList.remove('nudge'); syncCtl(); updateHUD(true);
+  if (room.uv){
+    var n = hiddenCount(room.t);
+    memo(n ? '노란 점선 친구 '+n+'명은 겉으론 멀쩡하지만 벌써 병균이 몸속에 있어요!' : '지금은 숨은 감염 친구가 없어요. '+UV_NOTE[L.dk]);
+  }
+});
+$('#c-tree').addEventListener('click', function(){ room.tree = !room.tree; syncCtl(); });
+var UV_NOTE = {
+  flu:'독감은 몸속에 숨어 있는 시간이 1~2일로 짧아요. 재생하면서 다시 눌러 보세요.',
+  noro:'노로바이러스는 하루 이틀 만에 바로 아파서 숨어 있는 시간이 짧아요. 대신 문손잡이·공·배식대에 묻은 병균이 보여요.',
+  measles:'홍역은 숨어 있는 시간이 길어서 실험 초반에 많이 보여요. 막대를 앞으로 당겨 보세요.'
+};
+
+/* ---------- 탐구 카드 ---------- */
+function showFinal(){
+  stopPlay(); show('final'); renderTabs('final');
+  $('#nick2').value = S.nick; $('#learned').value = S.learned;
+  $('#final-list').innerHTML = ORDER.map(function(k){
+    var b = S.progress[k].best, I = INFO[k];
+    if (!b) return '<li class="sheet"><span class="dn">'+I.title+'</span><span class="meta">아직 실험하지 않았어요</span><span></span></li>';
+    return '<li class="sheet"><span class="dn">'+I.title+'</span><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span class="cc">'+b.cards.map(function(c){ return svg(c); }).join('')+'</span><span class="meta">'+b.cards.map(function(c){ return E.CARDS[c].name; }).join(' · ')+'</span></span><span class="stars" style="gap:0">'+[0,1,2].map(function(s){ return s<b.stars ? svgFilled('star','var(--latent)') : svgFilled('star','var(--rule)'); }).join('')+'</span></li>';
+  }).join('');
+  renderCard();
+}
+$('#nick2').addEventListener('input', function(){ S.nick = this.value.trim(); save(); renderCardSoon(); });
+$('#learned').addEventListener('input', function(){ S.learned = this.value.trim(); save(); renderCardSoon(); });
+$('#btn-again').addEventListener('click', function(){ openDisease('flu'); });
+$('#f-back').addEventListener('click', function(){ openDisease(L.dk || 'measles'); });
+var cardTimer = 0; function renderCardSoon(){ clearTimeout(cardTimer); cardTimer = setTimeout(renderCard, 250); }
+var iconImgs = {};
+function iconImage(name, color){
+  var key = name+color; if (iconImgs[key]) return iconImgs[key];
+  var s = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="96" height="96" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+ICON[name]+'</svg>';
+  var img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s); iconImgs[key] = img; return img;
+}
+function loadIcons(){ var ps = []; E.CARD_ORDER.forEach(function(c){ var im = iconImage(c, '#0E7A84'); ps.push(im.complete ? Promise.resolve() : new Promise(function(r){ im.onload = r; im.onerror = r; })); }); return Promise.all(ps); }
+function wrapWords(ctx, text, maxW){
+  var words = text.split(' '), out = [], line = '';
+  words.forEach(function(w){ var tt = line ? line + ' ' + w : w; if (ctx.measureText(tt).width > maxW && line){ out.push(line); line = w; } else line = tt; });
+  if (line) out.push(line);
+  return out.some(function(l){ return ctx.measureText(l).width > maxW; }) ? wrapText(ctx, text, maxW) : out;
+}
+function wrapText(ctx, text, maxW){ var out = [], line = ''; for (var i=0;i<text.length;i++){ var tt = line + text[i]; if (ctx.measureText(tt).width > maxW && line){ out.push(line); line = text[i]; } else line = tt; } if (line) out.push(line); return out; }
+var cardBlob = null;
+function renderCard(){
+  var cv = document.createElement('canvas'), Wc = 1080, Hc = 1350; cv.width = Wc; cv.height = Hc;
+  var ctx = cv.getContext('2d');
+  var allText = '보건탐구시뮬레이터1호·감염병확산실험실내카드탐구원:이름없는.0123456789실험아직하지않았어요지킨친구명배운점모두Copyrightby수성중주나쌤원리를보여주는교육용모형입니다'+(S.nick||'')+(S.learned||'')+E.CARD_ORDER.map(function(c){ return E.CARDS[c].name; }).join('')+'독감노로바이러스홍역';
+  var fl = document.fonts && document.fonts.load ? Promise.all(['76px "Jua"','30px "Gowun Dodum"','40px "Gaegu"'].map(function(f){ return document.fonts.load(f, allText).catch(function(){}); })) : Promise.resolve();
+  Promise.all([fl, loadIcons()]).then(function(){
+    ctx.fillStyle = '#F6F9F8'; ctx.fillRect(0,0,Wc,Hc);
+    ctx.strokeStyle = '#DCE7EA'; ctx.lineWidth = 2;
+    for (var x=0;x<Wc;x+=36){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,Hc); ctx.stroke(); }
+    for (var y=0;y<Hc;y+=36){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(Wc,y); ctx.stroke(); }
+    ctx.fillStyle = '#FFFFFF'; roundRect(ctx, 60, 60, Wc-120, Hc-120, 28); ctx.fill(); ctx.strokeStyle = '#CAD7DE'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.strokeStyle = '#E9A3A0'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(118, 60); ctx.lineTo(118, Hc-60); ctx.stroke();
+    ctx.fillStyle = '#55667B'; ctx.font = '30px "Gowun Dodum", sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('보건 탐구 시뮬레이터 1호 · 감염병 확산 실험실', 150, 140);
+    ctx.fillStyle = '#1C2A3D'; ctx.font = '76px "Jua", sans-serif'; ctx.fillText('내 감염병 탐구 카드', 150, 232);
+    ctx.font = '40px "Gaegu", sans-serif'; ctx.fillStyle = '#0E7A84';
+    var d = new Date(), ds = d.getFullYear()+'. '+(d.getMonth()+1)+'. '+d.getDate()+'.';
+    ctx.fillText('탐구원: '+(S.nick || '이름 없는 탐구원')+'   ·   '+ds, 150, 296);
+    var y0 = 350, total = 0;
+    ORDER.forEach(function(k, idx){
+      var b = S.progress[k].best, I = INFO[k], top = y0 + idx*230;
+      ctx.fillStyle = '#F6F9F8'; roundRect(ctx, 150, top, Wc-270, 205, 20); ctx.fill(); ctx.strokeStyle = '#CAD7DE'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = '#55667B'; ctx.font = '26px "Gowun Dodum", sans-serif'; ctx.fillText('실험 '+I.n, 180, top+46);
+      ctx.fillStyle = '#1C2A3D'; var fs = 48; ctx.font = fs+'px "Jua", sans-serif'; while (ctx.measureText(I.title).width > 300 && fs > 30){ fs -= 2; ctx.font = fs+'px "Jua", sans-serif'; } ctx.fillText(I.title, 180, top+100);
+      if (!b){ ctx.fillStyle = '#55667B'; ctx.font = '30px "Gowun Dodum", sans-serif'; ctx.fillText('아직 실험하지 않았어요', 180, top+160); return; }
+      total += b.saved;
+      b.cards.forEach(function(c, j){
+        var x = 520 + j*128; ctx.fillStyle = '#D7EEF0'; roundRect(ctx, x, top+30, 104, 104, 22); ctx.fill();
+        ctx.drawImage(iconImage(c, '#0E7A84'), x+18, top+48, 68, 68);
+        ctx.fillStyle = '#1C2A3D'; ctx.font = '21px "Gowun Dodum", sans-serif'; ctx.textAlign = 'center';
+        var nm = E.CARDS[c].name, lines = wrapWords(ctx, nm, 122); lines.slice(0,2).forEach(function(l, q){ ctx.fillText(l, x+52, top+160+q*24); }); ctx.textAlign = 'left';
+      });
+      for (var s=0;s<3;s++) star(ctx, 200 + s*44, top+156, 18, s < b.stars ? '#E5B52A' : '#D5DEE4');
+      ctx.fillStyle = '#55667B'; ctx.font = '24px "Gowun Dodum", sans-serif'; ctx.fillText('지킨 친구 '+b.saved+'명', 180, top+194);
+    });
+    var ly = y0 + 3*230 + 10;
+    ctx.fillStyle = '#FFF9C9'; roundRect(ctx, 150, ly, Wc-270, 132, 18); ctx.fill();
+    ctx.fillStyle = '#3B3420'; ctx.font = '28px "Gowun Dodum", sans-serif'; ctx.fillText('내가 배운 점', 180, ly+48);
+    ctx.font = '44px "Gaegu", sans-serif';
+    if (S.learned){
+      var lines = wrapWords(ctx, S.learned, Wc-340);
+      lines.slice(0,2).forEach(function(l, q){ ctx.fillText(l, 180, ly+96+q*40); });
+    } else {
+      ctx.strokeStyle = '#C9B860'; ctx.lineWidth = 2; ctx.setLineDash([8,8]); ctx.beginPath(); ctx.moveTo(180, ly+100); ctx.lineTo(Wc-160, ly+100); ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.fillStyle = '#1C2A3D'; ctx.font = '34px "Jua", sans-serif'; ctx.fillText('내 카드로 지킨 친구: 모두 '+total+'명', 150, Hc-112);
+    ctx.fillStyle = '#55667B'; ctx.font = '24px "Gowun Dodum", sans-serif'; ctx.fillText('Copyright by 수성중 주나쌤 · 원리를 보여 주는 교육용 모형입니다', 150, Hc-76);
+    $('#card-img').src = cv.toDataURL('image/png');
+    cv.toBlob(function(b){ cardBlob = b; }, 'image/png');
+  });
+}
+var downloadsNS = null, IN_CLAUDE = !!(window.claude && window.claude.use);
+(function(){ try { if (IN_CLAUDE) window.claude.use('downloads').then(function(ns){ downloadsNS = ns; syncSave(); }).catch(function(){ syncSave(); }); syncSave(); } catch(e){ syncSave(); } })();
+function syncSave(){
+  var b = $('#btn-save');
+  if (downloadsNS || !IN_CLAUDE){ b.hidden = false; $('#save-msg').textContent = IN_CLAUDE ? '' : '저장이 안 되면 카드 그림을 길게 누르거나 마우스 오른쪽 버튼을 눌러 "이미지 저장"을 하세요.'; }
+  else { b.hidden = true; $('#save-msg').textContent = '오른쪽 카드 그림을 길게 누르거나 마우스 오른쪽 버튼을 눌러 "이미지 저장"을 하세요.'; }
+}
+function saveLocal(blob, name){
+  try {
+    var url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+    $('#save-msg').textContent = '저장했어요! 패들렛이나 학습지에 올려 보세요. (안 되면 카드 그림을 길게 눌러 저장하세요.)';
+  } catch(e){ $('#save-msg').textContent = '카드 그림을 길게 누르거나 마우스 오른쪽 버튼을 눌러 "이미지 저장"을 하세요.'; }
+}
+$('#btn-save').addEventListener('click', function(){
+  if (!cardBlob) return;
+  var name = '감염병탐구카드_'+(S.nick || '탐구원')+'.png';
+  if (!downloadsNS){ if (!IN_CLAUDE) saveLocal(cardBlob, name); return; }
+  downloadsNS.save({ filename:name, data:cardBlob }).then(function(){ $('#save-msg').textContent = '저장했어요! 패들렛이나 학습지에 올려 보세요.'; })
+    .catch(function(err){
+      var code = err && err.code;
+      if (code === 'declined') $('#save-msg').textContent = '저장을 취소했어요. 다시 누르면 저장할 수 있어요.';
+      else if (code === 'rate_limited') $('#save-msg').textContent = '저장 창이 이미 열려 있어요. 잠시 뒤에 다시 눌러 주세요.';
+      else { downloadsNS = null; syncSave(); }
+    });
+});
+
+/* ---------- 근거 ---------- */
+function evidenceHTML(){
+  var D = E.DISEASES;
+  function pct(m){ return Math.round(m*100)+'%'; }
+  function cell(c, dk){
+    var mm = E.CARDS[c].mult || {}, parts = [];
+    ['droplet','contact','air','food'].forEach(function(r){ if (mm[r] && mm[r][dk] != null && (D[dk].routes[r]||0) > 0) parts.push(ROUTE_NAME[r]+' '+pct(mm[r][dk])); });
+    if (c==='home') parts.push('아픈 첫날 오전만 등교 → 증상 뒤 전파 '+pct(E.homeRemain(D[dk])));
+    if (c==='vaccine') parts.push(D[dk].vaccine ? '접종률 '+pct(D[dk].vaccine.coverage)+' × 효과 '+pct(D[dk].vaccine.efficacy) : '백신 없음');
+    var single = 1 - E.reff(dk,[c])/D[dk].R0;
+    return (parts.length ? parts.join(', ') : '해당 경로 없음') + '<br><span style="color:var(--ink-soft)">전체 −'+Math.round(single*100)+'%</span>';
+  }
+  return '' +
+  '<p>이 실험실은 <b>실제 유행을 예측하는 도구가 아니라</b>, 감염병이 퍼지는 원리와 예방 행동의 효과를 눈으로 비교하게 하는 교육용 모형입니다. 수치의 크기와 순서는 문헌을 따르되, 30명 교실에서 차이가 보이도록 규모를 보정했습니다.</p>'+
+  '<h3>모형 구조</h3>'+
+  '<ul><li>학생 30명(6×5 좌석), 하루 단위의 확률적 행위자 기반 모형입니다. 상태는 건강 → 잠복(전파 없음) → 증상 전 전파(겉으론 건강) → 증상(아픔) → 회복입니다.</li>'+
+  '<li>전파 경로는 침방울·손과 물건·공기·음식 네 가지입니다. 침방울은 자리가 가까울수록 잘 옮고(좌석 거리 지수 감소), 나머지 경로는 교실 전체에 고르게 작용합니다.</li>'+
+  '<li>학생마다 고정된 감염 문턱값을 두고 누적 감염 압력이 문턱을 넘으면 감염됩니다. 같은 반을 같은 운(공통 난수)으로 비교하므로, "아무것도 안 했을 때" 아팠다가 카드 덕분에 안 아픈 친구를 정확히 가려 "지킨 친구"로 보여 줄 수 있습니다.</li>'+
+  '<li>예방 카드는 경로별 전파를 곱셈으로 줄입니다. 여러 카드를 고르면 효과가 겹쳐 쌓입니다.</li>'+
+  '<li>성공 기준은 동시에 아픈 학생 수가 보건실 침대 '+E.BEDS+'개를 넘지 않는 것입니다(곡선 평탄화와 의료 수용 능력 개념).</li></ul>'+
+  '<h3>질병 값</h3>'+
+  '<div class="tbl"><table><thead><tr><th>질병</th><th>교실 보정 R₀</th><th>문헌 값</th><th>잠복·전파 기간(일)</th><th>증상 전 전파</th><th>경로 비중</th></tr></thead><tbody>'+
+  '<tr><td>독감</td><td class="n">'+D.flu.R0+'</td><td>계절 독감 지역사회 중앙값 1.27~1.28 (Biggerstaff 2014). 학교 안 접촉 밀도를 반영해 높게 보정</td><td class="n">잠복 1, 증상 전 1~2, 증상 3~5</td><td class="n">'+pct(D.flu.presym)+'</td><td>침방울 55%, 손·물건 35%, 공기 10%</td></tr>'+
+  '<tr><td>노로바이러스</td><td class="n">'+D.noro.R0+'</td><td>학교 유행 R₀ 2.92 (Steele 2020, 미국 유행 자료)</td><td class="n">잠복 1, 증상 전 1, 증상 2~3</td><td class="n">'+pct(D.noro.presym)+' (무증상·회복기 배출 포함)</td><td>손·물건 60%, 음식 30%, 침방울(구토) 10%</td></tr>'+
+  '<tr><td>홍역</td><td class="n">'+D.measles.R0+'</td><td>고전적 범위 12~18 (Guerra 2017 체계적 문헌고찰)</td><td class="n">잠복 8~10, 증상 전 3, 증상 4~5</td><td class="n">'+pct(D.measles.presym)+'</td><td>공기 85%, 침방울 15%</td></tr>'+
+  '</tbody></table></div>'+
+  '<h3>예방 카드 효과 (남는 전파 비율)</h3>'+
+  '<div class="tbl"><table><thead><tr><th>카드</th><th>독감</th><th>노로바이러스</th><th>홍역</th><th>근거와 가정</th></tr></thead><tbody>'+
+  E.CARD_ORDER.map(function(c){
+    var note = {
+      soap:'지역사회 손위생 중재: 위장관 질환 31%, 호흡기 질환 21% 감소(Aiello 2008). 노로에는 비누 손씻기가 손가락 바이러스를 0.67~1.20 log 줄임(Liu 2010).',
+      sanitizer:'알코올 손소독제는 노로바이러스에 0.14~0.34 log 감소로 상대적으로 효과가 낮음(Liu 2010). 독감 같은 외피 바이러스에는 효과적이라고 가정.',
+      cough:'기침 예절 단독 효과의 근거는 제한적이어서 보수적으로 설정.',
+      mask:'지역사회 마스크 착용의 독감 유사 질환 예방 효과는 근거가 혼재(Jefferson 2023 코크란). 침방울 차단을 중심으로 보수적으로 설정.',
+      window:'홍역의 공기 전파와 재순환 공기의 영향(Riley 1978). 환기는 공기 경로 위주로 반영.',
+      home:'증상이 나타난 첫날 오전만 등교하고 귀가한다고 가정. 증상 전 전파는 그대로 남음. 등교 기준: 독감은 해열 후 24시간, 노로는 증상 소실 후 48시간.',
+      vaccine:'홍역 MMR 2회 접종 약 97% 예방(CDC), 접종률 95% 가정. 독감은 접종률 70%, 효과 50% 가정. 노로는 학교에서 맞는 백신이 없음. 카드를 고르지 않으면 "예방접종을 하지 않은 반"이라는 가상 상황입니다.',
+      food:'노로바이러스 예방수칙: 85℃ 1분 이상 가열(질병관리청).'
+    }[c];
+    return '<tr><td>'+E.CARDS[c].name+'</td><td>'+cell(c,'flu')+'</td><td>'+cell(c,'noro')+'</td><td>'+cell(c,'measles')+'</td><td>'+note+'</td></tr>';
+  }).join('')+
+  '</tbody></table></div>'+
+  '<h3>결과가 공정하도록</h3>'+
+  '<p>실제 감염병은 운도 크게 작용합니다. 같은 카드를 골라도 반마다 결과가 다를 수 있어 초등학생에게 혼란을 줄 수 있으므로, 실험을 시작할 때 다음 조건을 만족하는 반을 고릅니다. ① 아무것도 안 하면 보건실 침대 수의 2배 넘게 퍼진다. ② 퍼지는 힘이 '+E.GOOD+' 이하인 조합은 모두 성공하고 '+E.BAD+' 이상인 조합은 모두 실패한다. ③ 더 약한 조합이 성공하는데 더 센 조합이 실패하는 경우가 없다. 그 사이 조합은 반에 따라 성공하기도, 실패하기도 합니다. 결과 화면의 "퍼지는 힘"은 교실 전원이 감수성이라고 가정한 실효재생산수입니다.</p>'+
+  '<h3>한계</h3>'+
+  '<ul><li>교실 밖(가정·학원·급식실 다른 반) 전파, 학년 간 접촉, 주말은 넣지 않았습니다.</li><li>나이·기저질환·중증도·사망은 다루지 않습니다. 결과는 "보건실 → 집에서 쉬기" 수준에서 멈춥니다.</li><li>카드 효과는 실제 순응도(얼마나 잘 지키는지)를 평균적으로 가정한 값입니다.</li><li>첫 감염 학생은 무작위로 정하며, 이름을 붙이거나 원인으로 지목하지 않습니다.</li></ul>'+
+  '<h3>참고 문헌</h3>'+
+  '<ol>'+
+  '<li>Aiello AE, Coulborn RM, Perez V, Larson EL. Effect of hand hygiene on infectious disease risk in the community setting: a meta-analysis. <i>Am J Public Health</i>. 2008;98(8):1372–1381. <a href="https://doi.org/10.2105/AJPH.2007.124610" target="_blank" rel="noopener">doi:10.2105/AJPH.2007.124610</a></li>'+
+  '<li>Biggerstaff M, Cauchemez S, Reed C, et al. Estimates of the reproduction number for seasonal, pandemic, and zoonotic influenza: a systematic review of the literature. <i>BMC Infect Dis</i>. 2014;14:480. <a href="https://doi.org/10.1186/1471-2334-14-480" target="_blank" rel="noopener">doi:10.1186/1471-2334-14-480</a></li>'+
+  '<li>Steele MK, Wikswo ME, Hall AJ, et al. Characterizing norovirus transmission from outbreak data, United States. <i>Emerg Infect Dis</i>. 2020;26(8). <a href="https://wwwnc.cdc.gov/eid/article/26/8/19-1537" target="_blank" rel="noopener">doi:10.3201/eid2608.191537</a></li>'+
+  '<li>Guerra FM, Bolotin S, Lim G, et al. The basic reproduction number (R₀) of measles: a systematic review. <i>Lancet Infect Dis</i>. 2017;17(12):e420–e428. <a href="https://doi.org/10.1016/S1473-3099(17)30307-9" target="_blank" rel="noopener">doi:10.1016/S1473-3099(17)30307-9</a></li>'+
+  '<li>Riley EC, Murphy G, Riley RL. Airborne spread of measles in a suburban elementary school. <i>Am J Epidemiol</i>. 1978;107(5):421–432. <a href="https://pubmed.ncbi.nlm.nih.gov/665658/" target="_blank" rel="noopener">PubMed 665658</a></li>'+
+  '<li>Liu P, Yuen Y, Hsiao HM, Jaykus LA, Moe C. Effectiveness of liquid soap and hand sanitizer against Norwalk virus on contaminated hands. <i>Appl Environ Microbiol</i>. 2010;76(2):394–399. <a href="https://doi.org/10.1128/AEM.01729-09" target="_blank" rel="noopener">doi:10.1128/AEM.01729-09</a></li>'+
+  '<li>Jefferson T, Dooley L, Ferroni E, et al. Physical interventions to interrupt or reduce the spread of respiratory viruses. <i>Cochrane Database Syst Rev</i>. 2023;1:CD006207. <a href="https://doi.org/10.1002/14651858.CD006207.pub6" target="_blank" rel="noopener">doi:10.1002/14651858.CD006207.pub6</a></li>'+
+  '<li>CDC. Measles vaccine recommendations (MMR 2회 약 97%). <a href="https://www.cdc.gov/measles/hcp/vaccine-considerations/index.html" target="_blank" rel="noopener">cdc.gov</a> · How measles spreads (공기 중 최대 2시간). <a href="https://www.cdc.gov/measles/causes" target="_blank" rel="noopener">cdc.gov</a></li>'+
+  '<li>질병관리청 노로바이러스 예방수칙(비누 30초 손씻기, 85℃ 1분 가열, 증상 소실 후 48시간 등원·등교 자제), 파이낸셜뉴스 2025.12.8 보도. <a href="https://www.fnnews.com/news/202512080940444275" target="_blank" rel="noopener">fnnews.com</a></li>'+
+  '<li>인플루엔자 등교 기준(해열제 없이 정상 체온 회복 후 24시간), YTN 보도. <a href="https://www.ytn.co.kr/_ln/0103_201911152329363801" target="_blank" rel="noopener">ytn.co.kr</a></li>'+
+  '</ol>'+
+  '<h3>선생님 도구</h3>'+
+  '<div class="row-btns"><button class="btn secondary" id="ev-unlock" type="button">'+(S.unlockAll?'실험 순서 잠금 켜기':'모든 실험 바로 열기')+'</button><button class="btn secondary" id="ev-reset" type="button">이 기기 기록 지우기</button></div>'+
+  '<p id="ev-reset-q" class="fine" hidden></p>'+
+  '<p class="fine">Copyright by 수성중 주나쌤 · 보건 탐구 시뮬레이터 1호</p>';
+}
+$('#btn-evidence').addEventListener('click', function(){
+  $('#ev-body').innerHTML = evidenceHTML(); $('#evidence').showModal();
+  $('#ev-unlock').addEventListener('click', function(){ S.unlockAll = !S.unlockAll; save(); this.textContent = S.unlockAll?'실험 순서 잠금 켜기':'모든 실험 바로 열기'; renderTabs(L.dk || null); });
+  var armed = false;
+  $('#ev-reset').addEventListener('click', function(){
+    var q = $('#ev-reset-q');
+    if (!armed){ armed = true; this.textContent = '한 번 더 누르면 지워져요'; q.hidden = false; q.textContent = '내 자리, 별, 탐구 카드 내용이 이 기기에서 모두 지워져요.'; return; }
+    S.progress = {}; ORDER.forEach(function(k){ S.progress[k] = { done:false, tries:0, best:null }; }); S.me = null; room.me = null; S.learned = ''; save();
+    L.per = {}; L.dk = null; restore('flu');
+    $('#evidence').close(); goCover();
+  });
+});
+$('#ev-close').addEventListener('click', function(){ $('#evidence').close(); });
+
+/* ---------- 시작 ---------- */
+function preloadFonts(){
+  if (!document.fonts || !document.fonts.load) return Promise.resolve();
+  var txt = '우리반30명오늘도독감노로바이러스홍역실험일째나콜록우웩85℃1분?돋보기:겉으론멀쩡하지만몸속에병균이있는친구0123456789·';
+  return Promise.all(['22px "Jua"','13px "Gaegu"'].map(function(f){ return document.fonts.load(f, txt).catch(function(){}); }));
+}
+preloadFonts();
+$('.brand').addEventListener('click', goCover);
+$('.brand').style.cursor = 'pointer';
+room.me = S.me;
+renderTabs(null); syncCtl(); setCtlEnabled(false); renderBeds(0);
+requestAnimationFrame(loop);
+window.__lab = { L:L, S:S, room:room, E:E };
+})();
+</script>
+
+</body>
+</html>
