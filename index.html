@@ -349,6 +349,7 @@ footer{padding-block:10px 22px;text-align:center;font-size:13px;color:var(--ink-
     <!-- 표지 -->
     <section id="cover" aria-labelledby="cover-title">
       <div class="cover-text">
+        <span class="label">초등 고학년 · 1인 1기기 탐구</span>
         <h1 id="cover-title">감염병 확산<br><span class="germ-word">실험실</span></h1>
         <p class="lead">눈에 보이지 않는 병균은 우리 반에서 어떻게 퍼질까요? 세 가지 감염병을 직접 퍼뜨려 보고, 예방 카드 3장으로 우리 반을 지켜 보세요.</p>
         <ul class="exp-list" id="exp-list"></ul>
@@ -385,7 +386,7 @@ footer{padding-block:10px 22px;text-align:center;font-size:13px;color:var(--ink-
             <span><i class="ring"></i>숨은 감염(돋보기)</span>
             <span><i style="background:var(--sick)"></i>아파요</span>
             <span><i style="background:var(--recovered)"></i>나았어요</span>
-            <span><i class="shield"></i>예방접종</span>
+            <span><i class="shield"></i>방패(예방접종)</span>
             <span class="tree-key">감염 길:
               <svg viewBox="0 0 28 8" aria-hidden="true"><line x1="1" y1="4" x2="27" y2="4" stroke="var(--germ)" stroke-width="2"/></svg>침방울
               <svg viewBox="0 0 28 8" aria-hidden="true"><line x1="1" y1="4" x2="27" y2="4" stroke="var(--germ)" stroke-width="2" stroke-dasharray="7 4"/></svg>손·물건
@@ -765,9 +766,9 @@ var CARD_TEXT = {
 var INFO = {
   flu:{ n:1, title:'독감', full:'인플루엔자(독감)',
     routes:[['droplet','가장 많이'],['contact','조금'],['air','아주 조금']],
-    inc:'1~4일', sym:'갑자기 오르는 높은 열, 기침, 목 아픔, 온몸이 쑤셔요.',
+    inc:'1~4일', sym:'갑자기 높은 열이 나고, 기침, 목 아픔, 머리와 온몸이 아파요.',
     tip:'아프기 하루쯤 전부터, 겉으로는 멀쩡할 때도 옮길 수 있어요.',
-    learn:['기침·재채기는 팔꿈치로 가리고, 기침이 나면 마스크를 써요.','비누로 30초 손을 씻어요.','열이 나면 집에서 쉬어요. 열이 내리고 하루(24시간)가 지나면 등교해요.','해마다 가을에 독감 예방접종을 맞아요.'],
+    learn:['기침·재채기는 팔꿈치로 가리고, 기침이 나면 마스크를 써요.','비누로 30초 손을 씻어요.','열이 나면 집에서 쉬어요. 해열제 없이 열이 내리고 하루(24시간)가 지나면 등교해요.','해마다 가을에 독감 예방접종을 맞아요.'],
     real:'독감은 거의 해마다 겨울과 봄에 학교에서 유행해요. 바이러스가 조금씩 바뀌어서 예방접종은 해마다 새로 맞아요.',
     hints:['독감은 무엇으로 가장 많이 퍼졌나요? 관찰 질문의 답을 떠올려 보세요. 침방울을 막는 카드가 있어요.','아픈 친구가 계속 학교에 오면 병균도 계속 와요. 아픈 친구를 쉬게 하거나, 미리 몸에 방패를 만드는 카드도 있어요.','이렇게 해 보세요: 마스크 쓰기 + 아프면 집에서 쉬기 + 비누로 30초 손씻기'] },
   noro:{ n:2, title:'노로바이러스', full:'노로바이러스 장염',
@@ -781,9 +782,9 @@ var INFO = {
     routes:[['air','가장 많이'],['droplet','조금']],
     inc:'7~21일 (보통 10~12일)', sym:'열, 기침, 콧물, 빨개진 눈 → 며칠 뒤 온몸에 붉은 발진이 돋아요.',
     tip:'발진이 생기기 4일 전부터 옮겨서, 감기인 줄 알고 학교에 오기 쉬워요. 기침한 사람이 떠나도 공기 속에 최대 2시간 남아 있어요.',
-    learn:['MMR 예방접종을 두 번(돌 무렵, 만 4~6세) 맞아요. 두 번 맞으면 약 97% 예방돼요.','창문을 열어 자주 환기해요.','열과 발진이 나면 집에서 쉬고 병원에 가요.'],
+    learn:['MMR 예방접종을 두 번(돌 무렵, 만 4~6세) 맞아요. 두 번 맞으면 약 97% 예방돼요.','창문을 열어 자주 환기해요.','열과 발진이 나면 마스크를 쓰고 병원에 가요. 발진이 생기고 4일까지는 등교하지 않고 집에서 쉬어요.'],
     real:'1978년 미국의 한 초등학교에서는 홍역에 걸린 학생 한 명에게서 14개 교실, 28명에게 퍼졌어요. 환기 장치가 교실 공기를 다시 돌렸기 때문이에요.',
-    hints:['홍역은 공기로 퍼져서 교실 전체가 위험해요. 손을 씻어도 공기는 막을 수 없어요.','홍역은 아프기 전부터 옮겨요. 아파서 쉬면 이미 늦을 때가 많아요. 병에 걸리기 전에 미리 할 수 있는 카드는?','이렇게 해 보세요: 예방접종 + 창문 열어 환기 + 아프면 집에서 쉬기'] }
+    hints:['홍역은 공기로 퍼져서 교실 전체가 위험해요. 손을 씻어도 공기는 막을 수 없어요.','홍역은 발진이 생기기 4일 전, 감기처럼 보일 때부터 옮겨요. 발진을 보고 쉬면 이미 늦을 때가 많아요. 병에 걸리기 전에 미리 할 수 있는 카드는?','이렇게 해 보세요: 예방접종 + 창문 열어 환기 + 아프면 집에서 쉬기'] }
 };
 var ORDER = ['flu','noro','measles'];
 var STEP_NAMES = ['알아보기','아무것도 안 하면?','관찰 질문','카드 고르기','결과'];
@@ -795,17 +796,17 @@ function cardWhy(dk, c){
   var why = '';
   if (c==='vaccine' && dk==='noro') why = '노로바이러스는 아직 학교에서 맞는 백신이 없어요.';
   else if (c==='vaccine' && dk==='measles') why = '두 번 맞으면 약 97% 예방돼요. 접종을 못 한 친구까지 함께 지켜요.';
-  else if (c==='vaccine') why = '반 친구 10명 중 7명이 맞았다고 해 봤어요. 독감 백신은 걸릴 위험을 절반쯤 줄여요.';
+  else if (c==='vaccine') why = '반 친구 10명 중 7명이 맞았다고 해 봤어요. 독감 백신은 해마다 조금씩 다르지만 걸릴 위험을 절반쯤 줄여요.';
   else if (c==='food' && dk!=='noro') why = '이 병은 음식으로는 잘 옮지 않아요.';
   else if (c==='food') why = '익히면 음식 속 바이러스가 없어져요.';
   else if ((c==='soap'||c==='sanitizer') && dk==='measles') why = '홍역은 공기로 퍼져서 손씻기로는 막기 어려워요.';
   else if (c==='sanitizer' && dk==='noro') why = '노로바이러스는 알코올에 강해서 비누보다 훨씬 덜 없어져요.';
   else if (c==='soap' && dk==='noro') why = '비누 거품과 흐르는 물이 손에 붙은 바이러스를 씻어 내요.';
-  else if (c==='home' && dk==='measles') why = '홍역은 아프기 전부터 옮겨서 쉬기만으로는 늦어요.';
+  else if (c==='home' && dk==='measles') why = '홍역은 발진이 생기기 전, 감기처럼 보일 때부터 옮겨서 쉬기만으로는 늦어요.';
   else if (c==='home') why = '아픈 친구가 교실에 없으면 병균도 덜 와요.';
   else if (c==='window' && dk==='measles') why = '공기 속 바이러스를 밖으로 내보내요. 하지만 혼자서는 홍역을 못 막아요.';
   else if (c==='window' && dk==='noro') why = '노로바이러스는 공기로는 잘 퍼지지 않아요.';
-  else if (c==='window') why = '독감은 공기보다 침방울로 더 많이 퍼져요.';
+  else if (c==='window') why = '독감은 주로 가까이 있는 친구에게 침방울로 옮아서, 환기만으로는 부족해요.';
   else if ((c==='mask'||c==='cough') && dk==='noro') why = '노로바이러스는 기침보다 손과 음식으로 퍼져요.';
   else if (c==='mask'||c==='cough') why = dk==='measles' ? '침방울은 막지만 공기 속 바이러스는 다 못 막아요.' : '기침 침방울이 멀리 날아가지 않게 막아요.';
   else if (c==='soap'||c==='sanitizer') why = '손에 묻은 바이러스를 없애요.';
@@ -1548,7 +1549,7 @@ function resultView(){
       '<div class="row-btns">'+(nextDk ? '<button class="btn cta" id="go-next" type="button">다음 실험: '+INFO[nextDk].title+svg('arrow')+'</button>' : '<button class="btn cta" id="go-final" type="button">내 탐구 카드 만들기'+svg('arrow')+'</button>')+'<button class="btn secondary" id="go-retry" type="button">다른 조합도 해 보기</button></div>';
   }
   html += '<div class="details"><span class="label">카드마다 얼마나 통했을까?</span><ul class="cardfx">'+fx+'</ul>'+
-    '<div class="gauge"><span class="label">퍼지는 힘: 아픈 친구 1명이 평균 몇 명에게 옮길까?</span>'+
+    '<div class="gauge"><span class="label">퍼지는 힘: 이 교실 실험에서 아픈 친구 1명이 평균 몇 명에게 옮길까?</span>'+
       '<div class="row"><span>그냥 두면</span><span class="track"><span class="fill" style="width:'+(clamp(R0/gmax,0,1)*100)+'%;background:var(--ink-soft);opacity:.45"></span><span class="one" style="left:'+(1/gmax*100)+'%"></span></span><span class="v">'+fmtR(R0)+'명</span></div>'+
       '<div class="row"><span>내 카드</span><span class="track"><span class="fill" style="width:'+(clamp(Rn/gmax,0,1)*100)+'%;background:'+(Rn<1?'var(--recovered)':'var(--sick)')+'"></span><span class="one" style="left:'+(1/gmax*100)+'%"></span></span><span class="v">'+fmtR(Rn)+'명</span></div>'+
       '<span class="cap">빨간 점선(1명)보다 낮으면 병이 점점 줄어들어요. 운에 따라 결과가 조금씩 달라질 수 있어요.</span></div>'+
@@ -1613,7 +1614,7 @@ function triggers(){
     if (!T.full && sick > E.BEDS){ T.full = 1; memo('보건실 침대가 꽉 찼어요! 아픈 친구가 '+sick+'명이에요.'); }
     if (dk==='measles' && !T.measles && t > 6 && hidden >= 8){ T.measles = 1; memo('홍역은 몸속에 숨어 있는 시간이 길어요. 아직 아무도 아파 보이지 않지만…'); }
   } else {
-    if (room.flags.vaccine && !T.shield && t > 2){ T.shield = 1; memo('방패를 두른 친구에게 온 병균은 튕겨 나가요!'); }
+    if (room.flags.vaccine && !T.shield && t > 2){ T.shield = 1; memo(dk === 'flu' ? '방패(예방접종)를 두른 친구에게 온 병균은 튕겨 나갈 때가 많아요! 독감 방패는 완벽하지 않아서 걸리는 친구도 있어요.' : '방패(예방접종)를 두른 친구에게 온 병균은 거의 다 튕겨 나가요!'); }
     if (room.flags.home && !T.home){ for (var j=0;j<30;j++){ if (room.presence(j, Math.floor(t)) === 'leaving' && t-Math.floor(t) > .3){ T.home = 1; memo('아픈 친구가 집으로 돌아가 쉬어요. 빨리 나으렴!'); break; } } }
   }
 }
@@ -1853,7 +1854,7 @@ $('#c-lens').addEventListener('click', function(){
 });
 $('#c-tree').addEventListener('click', function(){ room.tree = !room.tree; syncCtl(); });
 var UV_NOTE = {
-  flu:'독감은 몸속에 숨어 있는 시간이 1~2일로 짧아요. 재생하면서 다시 눌러 보세요.',
+  flu:'독감은 몸속에 숨어 있는 시간이 보통 2일쯤으로 짧아요. 재생하면서 다시 눌러 보세요.',
   noro:'노로바이러스는 하루 이틀 만에 바로 아파서 숨어 있는 시간이 짧아요. 대신 문손잡이·공·배식대에 묻은 병균이 보여요.',
   measles:'홍역은 숨어 있는 시간이 길어서 실험 초반에 많이 보여요. 막대를 앞으로 당겨 보세요.'
 };
@@ -2003,8 +2004,8 @@ function evidenceHTML(){
       cough:'기침 예절 단독 효과의 근거는 제한적이어서 보수적으로 설정.',
       mask:'지역사회 마스크 착용의 독감 유사 질환 예방 효과는 근거가 혼재(Jefferson 2023 코크란). 침방울 차단을 중심으로 보수적으로 설정.',
       window:'홍역의 공기 전파와 재순환 공기의 영향(Riley 1978). 환기는 공기 경로 위주로 반영.',
-      home:'증상이 나타난 첫날 오전만 등교하고 귀가한다고 가정. 증상 전 전파는 그대로 남음. 등교 기준: 독감은 해열 후 24시간, 노로는 증상 소실 후 48시간.',
-      vaccine:'홍역 MMR 2회 접종 약 97% 예방(CDC), 접종률 95% 가정. 독감은 접종률 70%, 효과 50% 가정. 노로는 학교에서 맞는 백신이 없음. 카드를 고르지 않으면 "예방접종을 하지 않은 반"이라는 가상 상황입니다.',
+      home:'증상이 나타난 첫날 오전만 등교하고 귀가한다고 가정. 증상 전 전파는 그대로 남음. 등교 기준: 독감은 해열제 없이 체온 회복 후 24시간, 노로는 증상 소실 후 48시간, 홍역은 발진 후 4일까지 등교 중지.',
+      vaccine:'홍역 MMR 2회 접종 약 97% 예방(CDC), 접종률 95% 가정. 독감은 접종률 70%, 효과 50% 가정(CDC: 잘 맞는 해에 독감 진료 위험 40~60% 감소). 노로는 승인된 백신이 없음(2026년 현재 임상시험 중). 카드를 고르지 않으면 "예방접종을 하지 않은 반"이라는 가상 상황입니다.',
       food:'노로바이러스 예방수칙: 85℃ 1분 이상 가열(질병관리청).'
     }[c];
     return '<tr><td>'+E.CARDS[c].name+'</td><td>'+cell(c,'flu')+'</td><td>'+cell(c,'noro')+'</td><td>'+cell(c,'measles')+'</td><td>'+note+'</td></tr>';
@@ -2025,7 +2026,8 @@ function evidenceHTML(){
   '<li>Jefferson T, Dooley L, Ferroni E, et al. Physical interventions to interrupt or reduce the spread of respiratory viruses. <i>Cochrane Database Syst Rev</i>. 2023;1:CD006207. <a href="https://doi.org/10.1002/14651858.CD006207.pub6" target="_blank" rel="noopener">doi:10.1002/14651858.CD006207.pub6</a></li>'+
   '<li>CDC. Measles vaccine recommendations (MMR 2회 약 97%). <a href="https://www.cdc.gov/measles/hcp/vaccine-considerations/index.html" target="_blank" rel="noopener">cdc.gov</a> · How measles spreads (공기 중 최대 2시간). <a href="https://www.cdc.gov/measles/causes" target="_blank" rel="noopener">cdc.gov</a></li>'+
   '<li>질병관리청 노로바이러스 예방수칙(비누 30초 손씻기, 85℃ 1분 가열, 증상 소실 후 48시간 등원·등교 자제), 파이낸셜뉴스 2025.12.8 보도. <a href="https://www.fnnews.com/news/202512080940444275" target="_blank" rel="noopener">fnnews.com</a></li>'+
-  '<li>인플루엔자 등교 기준(해열제 없이 정상 체온 회복 후 24시간), YTN 보도. <a href="https://www.ytn.co.kr/_ln/0103_201911152329363801" target="_blank" rel="noopener">ytn.co.kr</a></li>'+
+  '<li>인플루엔자 등교 기준(해열제 없이 정상 체온 회복 후 24시간), YTN 보도. <a href="https://www.ytn.co.kr/_ln/0103_201911152329363801" target="_blank" rel="noopener">ytn.co.kr</a> · 인플루엔자 잠복기 1~4일(평균 2일), 증상 1일 전부터 전염, 질병관리청. <a href="https://kdca.go.kr/kdca/3495/subview.do" target="_blank" rel="noopener">kdca.go.kr</a></li>'+
+  '<li>홍역 등교 중지(발진 후 4일까지), 디지털데일리 2026.3.3 보도. <a href="https://www.ddaily.co.kr/page/view/2026030313421116230" target="_blank" rel="noopener">ddaily.co.kr</a> · CDC. Flu vaccine effectiveness. <a href="https://www.cdc.gov/flu/vaccines-work/vaccineeffect.htm" target="_blank" rel="noopener">cdc.gov</a></li>'+
   '</ol>'+
   '<h3>선생님 도구</h3>'+
   '<div class="row-btns"><button class="btn secondary" id="ev-unlock" type="button">'+(S.unlockAll?'실험 순서 잠금 켜기':'모든 실험 바로 열기')+'</button><button class="btn secondary" id="ev-reset" type="button">이 기기 기록 지우기</button></div>'+
